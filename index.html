@@ -1842,7 +1842,6 @@ function applyCustomFonts() {
         });
     
   prevBtn.addEventListener('click', () => {
-  //currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
   currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
   updateTrackInfo();
   if (isPlaying) {
@@ -1851,7 +1850,6 @@ function applyCustomFonts() {
   });
     
  nextBtn.addEventListener('click', () => {
-  //currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
   currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
   updateTrackInfo();
   if (isPlaying) {
@@ -1864,22 +1862,22 @@ function applyCustomFonts() {
             audioPlayer.volume = volume / 100;
             updateVolumeDisplay();
         });
-    
-        // Audio player events
-        audioPlayer.addEventListener('ended', () => {
-            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
-            updateTrackInfo();
-            if (isPlaying) {
-                playAudio();
-            }
-        });
-    
+ 
+
+  audioPlayer.addEventListener('ended', () => {
+  currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+  updateTrackInfo();
+  if (isPlaying) {
+  playAudio();
+  }
+  });
+ 
+
         audioPlayer.addEventListener('loadedmetadata', () => {
             audioPlayer.volume = volume / 100;
             updateVolumeDisplay();
         });
     }
-    
     // Add these new functions to handle custom button images
     function setupPlayerButtonImages() {
         // Setup play button
