@@ -204,6 +204,32 @@
             align-items: center;
             justify-content: center;
         }
+/* Updated styles for better subtitle image alignment */
+.site-subtitle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem; /* Consistent spacing between images */
+    margin-top: 0.7rem;
+    position: relative;
+    height: 30px; /* Set fixed height for container */
+}
+
+.site-subtitle-img {
+    max-height: 30px;
+    transition: transform 0.3s ease;
+    display: block; /* Ensures inline elements behave properly */
+    vertical-align: middle; /* Vertical alignment */
+    object-fit: contain; /* Preserves aspect ratio */
+}
+
+/* Add a wrapper for subtitle images to align them perfectly */
+.subtitle-img-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 
 
 .control-btn {
@@ -1309,11 +1335,34 @@ function setSubtitleImages() {
     SUBTITLE_CONFIG.images.forEach(imgConfig => {
         // Create wrapper to make clickable if link is provided
         const wrapper = imgConfig.link ? document.createElement('a') : document.createElement('div');
+        wrapper.className = 'subtitle-img-wrapper';
         
         if (imgConfig.link) {
             wrapper.href = imgConfig.link;
             wrapper.target = "_blank"; // Open in new tab
         }
+        
+        // Create image element
+        const img = document.createElement('img');
+        img.src = imgConfig.url;
+        img.alt = imgConfig.alt || '';
+        img.className = 'site-subtitle-img';
+        
+        // We're now specifying height in the container
+        if (imgConfig.maxHeight) {
+            img.style.maxHeight = imgConfig.maxHeight;
+        }
+        
+        // Add image to wrapper
+        wrapper.appendChild(img);
+        
+        // Add wrapper to container
+        subtitleContainer.appendChild(wrapper);
+    });
+    
+    // Append container to header after existing elements
+    headerElement.appendChild(subtitleContainer);
+}
         
         // Create image element
         const img = document.createElement('img');
@@ -1992,6 +2041,40 @@ function applyCustomFonts() {
                 improveVideoSync(); // New function for better video sync
             });
         </script>
+<script>
+// Apply the updated alignment for subtitle images
+document.addEventListener('DOMContentLoaded', () => {
+    // Add the new CSS styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        .site-subtitle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 0.7rem;
+            position: relative;
+            height: 30px;
+        }
+        
+        .site-subtitle-img {
+            max-height: 30px;
+            transition: transform 0.3s ease;
+            display: block;
+            vertical-align: middle;
+            object-fit: contain;
+        }
+        
+        .subtitle-img-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+    `;
+    document.head.appendChild(styleSheet);
+});
+</script>
 </body>
 
 </html>
