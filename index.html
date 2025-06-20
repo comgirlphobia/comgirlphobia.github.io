@@ -96,14 +96,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3rem;
+            gap: 1.5rem;
         }
 
 
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
             margin-top: 1rem;
         }
 
@@ -449,7 +449,7 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        margin-top: 0.7rem;
+        margin-top: 0.4rem;
     }
     
     .site-subtitle-img {
@@ -1000,8 +1000,15 @@
         }
     };
 // Add this to VOLUME_SLIDER_CONFIG
+// Complete Volume Slider Configuration
 const VOLUME_SLIDER_CONFIG = {
-    // ... existing properties
+    thumbSize: 20,
+    thumbColor: "#ffffff",
+    thumbBorderWidth: 0,
+    thumbBorderColor: "transparent",
+    thumbShadow: "0 2px 4px rgba(0,0,0,0.3)",
+    activeColor: "#e0e0e0",
+    hoverScale: 1.1,
     thumbImage: "https://files.catbox.moe/szphgw.png", // URL to thumb image
     useThumbImage: true // Set to true to use image instead of color
 };
@@ -1814,6 +1821,33 @@ function loadCustomFonts() {
     fontStyle.textContent = fontFacesCSS;
     document.head.appendChild(fontStyle);
 }
+// Add this to your existing page
+function adjustSpacing() {
+    // Create a style element
+    const style = document.createElement('style');
+    
+    // Add CSS to adjust spacing
+    style.textContent = `
+        .site-subtitle-container {
+            margin-top: 0.3rem;
+        }
+        
+        .container {
+            gap: 1.5rem;
+        }
+        
+        .header {
+            margin-bottom: 0.5rem;
+        }
+        
+        .music-player {
+            padding: 0.75rem;
+        }
+    `;
+    
+    // Append to document head
+    document.head.appendChild(style);
+}
 // Apply custom fonts to elements
 function applyCustomFonts() {
     // Site title
@@ -2121,6 +2155,7 @@ function applyCustomFonts() {
                 initializePaused();
                 setupEnterOverlay(); // New function for enter overlay
                 improveVideoSync(); // New function for better video sync
+                adjustSpacing();
             });
         </script>
 </body>
