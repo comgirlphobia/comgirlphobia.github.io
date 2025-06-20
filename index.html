@@ -403,7 +403,43 @@
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
         }
 
+/* Add this to your style section */
+.control-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
 
+.control-btn.with-image {
+    font-size: 0;
+    width: var(--btn-size, 32px);
+    height: var(--btn-size, 32px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.play-btn.with-image {
+    background: transparent;
+}
+
+/* Ensure glow effect works with image buttons */
+.control-btn.with-image.glow::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: calc(var(--btn-size, 32px) * 1.7);
+    height: calc(var(--btn-size, 32px) * 1.7);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent) 45%, transparent 70%);
+    opacity: 0.34;
+    z-index: 0;
+    animation: glowing-circ 0.6s cubic-bezier(0.6, 0.09, 0.4, 1);
+    pointer-events: none;
+}
  /* Updated Avatar and Decoration CSS */
 .profile-avatar-container {
     position: relative;
@@ -833,6 +869,27 @@
             size: 24, // Size in pixels
             count: 10 // Number of trail elements
         };
+
+// Music Player Button Configuration
+const MUSIC_PLAYER_BUTTONS = {
+    play: {
+        image: "https://files.catbox.moe/example-play.png", // URL to play button image
+        pauseImage: "https://files.catbox.moe/example-pause.png", // URL to pause button image (when playing)
+        text: "▶", // Fallback text if image fails to load
+        pauseText: "⏸", // Fallback pause text
+        size: 20 // Size in pixels
+    },
+    prev: {
+        image: "https://files.catbox.moe/example-prev.png", // URL to previous button image
+        text: "⏮", // Fallback text
+        size: 18
+    },
+    next: {
+        image: "https://files.catbox.moe/example-next.png", // URL to next button image
+        text: "⏭", // Fallback text
+        size: 18
+    }
+};
         
         // Avatar Decoration Configuration - UPDATED!
 const AVATAR_DECORATION_CONFIG = {
@@ -1306,80 +1363,150 @@ const AVATAR_DECORATION_CONFIG = {
             }
         }
 
-        function initializePaused() {
-            if (AUTO_PAUSE_CONFIG.enabled) {
-                const video = document.getElementById('bg-video');
-                
-                // Set default volume
-                volume = AUTO_PAUSE_CONFIG.defaultVolume;
-                volumeSlider.value = volume;
-                audioPlayer.volume = volume / 100;
-                updateVolumeDisplay();
-                
-                // Ensure everything is paused
-                isPlaying = false;
-                playBtn.textContent = '▶';
-                playBtn.style.transform = 'scale(1)';
-                
-                // Pause audio and video
-                audioPlayer.pause();
-                if (video.src) {
-                    video.pause();
-                }
-            }
+      function initializePaused() {
+    if (AUTO_PAUSE_CONFIG.enabled) {
+        const video = document.getElementById('bg-video');
+        
+        // Set default volume
+        volume = AUTO_PAUSE_CONFIG.defaultVolume;
+        volumeSlider.value = volume;
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+        
+        // Ensure everything is paused
+        isPlaying = false;
+        updatePlayButtonState();
+        
+        // Pause audio and video
+        audioPlayer.pause();
+        if (video.src) {
+            video.pause();
         }
+    }
+}
 
         // Setup player controls
-        function setupMusicPlayer() {
-            // Music player controls
-            playBtn.addEventListener('click', () => {
-                isPlaying = !isPlaying;
-                playBtn.textContent = isPlaying ? '⏸' : '▶';
-                playBtn.style.transform = isPlaying ? 'scale(1.1)' : 'scale(1)';
-                
-                if (isPlaying) {
-                    playAudio();
-                } else {
-                    pauseAudio();
-                }
-            });
-
-            prevBtn.addEventListener('click', () => {
-                currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
-                updateTrackInfo();
-                if (isPlaying) {
-                    playAudio();
-                }
-            });
-
-            nextBtn.addEventListener('click', () => {
-                currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
-                updateTrackInfo();
-                if (isPlaying) {
-                    playAudio();
-                }
-            });
-
-            volumeSlider.addEventListener('input', (e) => {
-                volume = e.target.value;
-                audioPlayer.volume = volume / 100;
-                updateVolumeDisplay();
-            });
-
-            // Audio player events
-            audioPlayer.addEventListener('ended', () => {
-                currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
-                updateTrackInfo();
-                if (isPlaying) {
-                    playAudio();
-                }
-            });
-
-            audioPlayer.addEventListener('loadedmetadata', () => {
-                audioPlayer.volume = volume / 100;
-                updateVolumeDisplay();
-            });
+      // Update the setupMusicPlayer function with this code
+function setupMusicPlayer() {
+    // Set up button images first
+    setupPlayerButtonImages();
+    
+    // Music player controls
+    playBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        updatePlayButtonState();
+        
+        if (isPlaying) {
+            playAudio();
+        } else {
+            pauseAudio();
         }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
+        updateTrackInfo();
+        if (isPlaying) {
+            playAudio();
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+        updateTrackInfo();
+        if (isPlaying) {
+            playAudio();
+        }
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+        volume = e.target.value;
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+    });
+
+    // Audio player events
+    audioPlayer.addEventListener('ended', () => {
+        currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+        updateTrackInfo();
+        if (isPlaying) {
+            playAudio();
+        }
+    });
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+    });
+}
+
+// Add these new functions to handle custom button images
+function setupPlayerButtonImages() {
+    // Setup play button
+    setupButtonImage(playBtn, MUSIC_PLAYER_BUTTONS.play, true);
+    
+    // Setup previous button
+    setupButtonImage(prevBtn, MUSIC_PLAYER_BUTTONS.prev);
+    
+    // Setup next button
+    setupButtonImage(nextBtn, MUSIC_PLAYER_BUTTONS.next);
+}
+
+function setupButtonImage(button, config, isPlayButton = false) {
+    // Skip if no configuration or no image URL
+    if (!config || !config.image || config.image.trim() === '') {
+        return;
+    }
+    
+    // Clear button content
+    button.innerHTML = '';
+    
+    // Set button size
+    button.style.setProperty('--btn-size', config.size + 'px');
+    button.classList.add('with-image');
+    
+    // Create image element
+    const img = document.createElement('img');
+    img.src = config.image;
+    img.alt = config.text || '';
+    
+    // If this is play button, store pause image URL for later
+    if (isPlayButton && config.pauseImage) {
+        button.dataset.playImage = config.image;
+        button.dataset.pauseImage = config.pauseImage;
+        button.dataset.playText = config.text || '▶';
+        button.dataset.pauseText = config.pauseText || '⏸';
+    }
+    
+    // Add image to button
+    button.appendChild(img);
+    
+    // Remove background from play button if it has an image
+    if (button.classList.contains('play-btn')) {
+        button.style.background = 'transparent';
+    }
+}
+
+function updatePlayButtonState() {
+    // Update play button appearance based on playing state
+    if (playBtn.classList.contains('with-image')) {
+        // We're using images
+        const img = playBtn.querySelector('img');
+        if (isPlaying && playBtn.dataset.pauseImage) {
+            img.src = playBtn.dataset.pauseImage;
+            img.alt = playBtn.dataset.pauseText;
+        } else {
+            img.src = playBtn.dataset.playImage;
+            img.alt = playBtn.dataset.playText;
+        }
+    } else {
+        // We're using text
+        playBtn.textContent = isPlaying ? '⏸' : '▶';
+    }
+    
+    // Scale effect
+    playBtn.style.transform = isPlaying ? 'scale(1.1)' : 'scale(1)';
+}
 
         // Setup player glow effects
         function setupPlayerGlow() {
