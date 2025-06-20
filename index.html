@@ -1018,7 +1018,57 @@
                     buttons: "'JetBrains Mono', monospace"
                 }
             };
-    
+    // Custom Font Configuration
+const FONT_CONFIG = {
+    // Main site fonts
+    siteTitle: {
+        family: "MainTitle",
+        url: "/fonts/maintitle.woff2", // Path to your uploaded font
+        fallback: "'JetBrains Mono', monospace" // Fallback font
+    },
+    siteDescription: {
+        family: "SiteDesc",
+        url: "/fonts/sitedesc.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    // Profile fonts
+    profileName: {
+        family: "ProfileName",
+        url: "/fonts/profilename.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    profileRole: {
+        family: "ProfileRole",
+        url: "/fonts/profilerole.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    profileBio: {
+        family: "ProfileBio",
+        url: "/fonts/profilebio.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    profileButtons: {
+        family: "ProfileButtons",
+        url: "/fonts/profilebuttons.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    // Music player fonts
+    musicTitle: {
+        family: "MusicTitle",
+        url: "/fonts/musictitle.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    musicArtist: {
+        family: "MusicArtist",
+        url: "/fonts/musicartist.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    volumeText: {
+        family: "VolumeText",
+        url: "/fonts/volumetext.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    }
+};
             // Custom Fonts Configuration - Add your custom fonts here
             const CUSTOM_FONTS = [
                 {
@@ -1416,6 +1466,100 @@
             }
         }
     }
+// Load custom fonts from files
+function loadCustomFonts() {
+    // Create style element for font faces
+    const fontStyle = document.createElement('style');
+    fontStyle.id = 'custom-font-faces';
+    
+    // Build CSS for all configured fonts
+    let fontFacesCSS = '';
+    
+    // Process each font in the configuration
+    Object.entries(FONT_CONFIG).forEach(([key, font]) => {
+        if (font.url && font.family) {
+            fontFacesCSS += `
+                @font-face {
+                    font-family: '${font.family}';
+                    src: url('${font.url}') format('woff2');
+                    font-weight: normal;
+                    font-style: normal;
+                    font-display: swap;
+                }
+            `;
+        }
+    });
+    
+    // Add the font faces to the style element
+    fontStyle.textContent = fontFacesCSS;
+    document.head.appendChild(fontStyle);
+}
+// Apply custom fonts to elements
+function applyCustomFonts() {
+    // Site title
+    if (FONT_CONFIG.siteTitle) {
+        const siteTitle = document.getElementById('site-title');
+        if (siteTitle) {
+            siteTitle.style.fontFamily = FONT_CONFIG.siteTitle.family + ', ' + FONT_CONFIG.siteTitle.fallback;
+        }
+    }
+    
+    // Site description
+    if (FONT_CONFIG.siteDescription) {
+        const siteDesc = document.querySelector('.header p');
+        if (siteDesc) {
+            siteDesc.style.fontFamily = FONT_CONFIG.siteDescription.family + ', ' + FONT_CONFIG.siteDescription.fallback;
+        }
+    }
+    
+    // Profile role
+    if (FONT_CONFIG.profileRole) {
+        const profileRole = document.getElementById('profile-role');
+        if (profileRole) {
+            profileRole.style.fontFamily = FONT_CONFIG.profileRole.family + ', ' + FONT_CONFIG.profileRole.fallback;
+        }
+    }
+    
+    // Profile bio
+    if (FONT_CONFIG.profileBio) {
+        const profileBio = document.getElementById('profile-bio');
+        if (profileBio) {
+            profileBio.style.fontFamily = FONT_CONFIG.profileBio.family + ', ' + FONT_CONFIG.profileBio.fallback;
+        }
+    }
+    
+    // Profile buttons
+    if (FONT_CONFIG.profileButtons) {
+        const profileLinks = document.querySelectorAll('.profile-link');
+        profileLinks.forEach(link => {
+            link.style.fontFamily = FONT_CONFIG.profileButtons.family + ', ' + FONT_CONFIG.profileButtons.fallback;
+        });
+    }
+    
+    // Music player title
+    if (FONT_CONFIG.musicTitle) {
+        const trackTitle = document.getElementById('track-title');
+        if (trackTitle) {
+            trackTitle.style.fontFamily = FONT_CONFIG.musicTitle.family + ', ' + FONT_CONFIG.musicTitle.fallback;
+        }
+    }
+    
+    // Music player artist
+    if (FONT_CONFIG.musicArtist) {
+        const trackArtist = document.getElementById('track-artist');
+        if (trackArtist) {
+            trackArtist.style.fontFamily = FONT_CONFIG.musicArtist.family + ', ' + FONT_CONFIG.musicArtist.fallback;
+        }
+    }
+    
+    // Volume text
+    if (FONT_CONFIG.volumeText) {
+        const volumePercent = document.getElementById('volume-percent');
+        if (volumePercent) {
+            volumePercent.style.fontFamily = FONT_CONFIG.volumeText.family + ', ' + FONT_CONFIG.volumeText.fallback;
+        }
+    }
+}
     
             // Setup player controls
           // Update the setupMusicPlayer function with this code
@@ -1630,7 +1774,9 @@
     
             // Initialize everything
             window.addEventListener('DOMContentLoaded', () => {
-                importCustomFonts();
+                loadCustomFonts();  // Load custom font files first
+                importCustomFonts(); // Keep your existing Google Fonts import if needed
+                applyCustomFonts();  // Apply the custom fonts to elements
                 setFavicon();
                 setSiteTitleImage();
                 setupCursorTrails();
