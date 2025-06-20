@@ -743,10 +743,15 @@
         body.has-bgvideo {
             background: none !important;
         }
+
+        video::-internal-media-controls-overlay-cast-button,
+        video::-internal-media-controls-pip-button {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
-<video id="bg-video" autoplay muted loop playsinline style="display:none;"></video>
+<video id="bg-video" muted loop playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;"></video>
     <!-- Custom Cursor -->
     <div class="cursor"></div>
 
@@ -816,10 +821,35 @@
 </div>
 
     <script>
-        // ============ Enforce HTTPS ============
-        if (location.protocol === 'http:') {
-            location.replace(location.href.replace(/^http:/, 'https:'));
+        // ============ Enforce Bullshit ============
+        if (location.protocol === "http:") {
+            location.replace(location.href.replace(/^http:/, "https:"));
         }
+
+        document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        document.addEventListener("keydown", function (e) {
+            const key = e.key.toLowerCase();
+
+            if (key === "f12" || (e.ctrlKey && e.shiftKey && (key === "i" || key === "j" || key === "c")) || (e.ctrlKey && key === "u") || ((e.ctrlKey || e.metaKey) && key === "s")) {
+                e.preventDefault();
+                e.stopPropagation();
+                alert("Inspection is disabled.\nBlehhhh.");
+                return false;
+            }
+        });
+
+        (function get32d() {
+            setInterval(() => {
+                const hce32s = performance.now();
+                debugger;
+                const dfgh2f2 = performance.now();
+
+                if (dfgh2f2 - hce32s > 50) {
+                    alert("Inspection is disabled.\nBlehhhh.");
+                }
+            }, 150);
+        })();
         
         // ============ EASY CONFIGURATION SECTION ============
         
