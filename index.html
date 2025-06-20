@@ -972,7 +972,7 @@
  const SUBTITLE_CONFIG = {
   images: [
   {
-  url: "https://files.catbox.moe/c9ysu1.png", // Replace with your discord image
+  url: "https://files.catbox.moe/kl16qs.png", // Replace with your discord image
   alt: "discord.gg/infected",
   link: "https://discord.gg/infected", // Your discord link here
   maxHeight: "40px"
@@ -999,6 +999,12 @@
             size: 50
         }
     };
+// Add this to VOLUME_SLIDER_CONFIG
+const VOLUME_SLIDER_CONFIG = {
+    // ... existing properties
+    thumbImage: "https://files.catbox.moe/szphgw.png", // URL to thumb image
+    useThumbImage: true // Set to true to use image instead of color
+};
             
             // Avatar Decoration Configuration - UPDATED!
     const AVATAR_DECORATION_CONFIG = {
@@ -1620,6 +1626,64 @@ function randomizeAndPlayMusic() {
                     }
                 });
             }
+function applyVolumeSliderStyles() {
+    const style = document.createElement('style');
+    
+    // Base styles
+    let styleText = `
+        .volume-slider::-webkit-slider-thumb,
+        .volume-slider::-moz-range-thumb {
+            width: ${VOLUME_SLIDER_CONFIG.thumbSize}px;
+            height: ${VOLUME_SLIDER_CONFIG.thumbSize}px;
+            border-radius: 50%;
+            cursor: none;
+            box-shadow: ${VOLUME_SLIDER_CONFIG.thumbShadow};
+            transition: transform 0.2s ease;
+        }
+        
+        .volume-slider::-webkit-slider-thumb:hover,
+        .volume-slider::-moz-range-thumb:hover {
+            transform: scale(${VOLUME_SLIDER_CONFIG.hoverScale});
+        }
+        
+        .volume-slider:active::-webkit-slider-thumb {
+            filter: brightness(1.1);
+        }
+    `;
+    
+    // Add image or color based on config
+    if (VOLUME_SLIDER_CONFIG.useThumbImage && VOLUME_SLIDER_CONFIG.thumbImage) {
+        styleText += `
+            .volume-slider::-webkit-slider-thumb,
+            .volume-slider::-moz-range-thumb {
+                appearance: none;
+                background-image: url(${VOLUME_SLIDER_CONFIG.thumbImage});
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-color: transparent;
+                border: none;
+            }
+        `;
+    } else {
+        styleText += `
+            .volume-slider::-webkit-slider-thumb,
+            .volume-slider::-moz-range-thumb {
+                appearance: none;
+                background: ${VOLUME_SLIDER_CONFIG.thumbColor};
+                border: ${VOLUME_SLIDER_CONFIG.thumbBorderWidth}px solid ${VOLUME_SLIDER_CONFIG.thumbBorderColor};
+            }
+            
+            .volume-slider:active::-webkit-slider-thumb,
+            .volume-slider:active::-moz-range-thumb {
+                background: ${VOLUME_SLIDER_CONFIG.activeColor};
+            }
+        `;
+    }
+    
+    style.textContent = styleText;
+    document.head.appendChild(style);
+}
     
             // Music Player
             let currentTrack = 0;
@@ -2040,6 +2104,7 @@ function applyCustomFonts() {
                 setupCursorTrails();
                 setCursor();
                 setTrails();
+                applyVolumeSliderStyles();
                 setupCursorMovement();
                 setProfileNameBackground();
                 setProfileNameImage();
