@@ -444,28 +444,35 @@
     }
     
     /* Header subtitle images style */
-    .site-subtitle-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 0.7rem;
-    }
-    
-    .site-subtitle-img {
-        max-height: 30px;
-        transition: transform 0.3s ease;
-    }
-    
-    .site-subtitle-img:hover {
-        transform: scale(1.05);
-    }
-    
-    /* Hide the original subtitle text */
-    .header p {
-        display: none;
-    }
+ .site-subtitle-container {
+  display: flex;
+  align-items: center; /* Vertically align items */
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+ }
+ 
 
+ .site-subtitle-img {
+  max-height: 30px;
+  transition: transform 0.3s ease;
+ }
+ 
+
+ .site-subtitle-img:hover {
+  transform: scale(1.05);
+ }
+ 
+
+ /*Specific alignments*/
+ .site-subtitle-container img:first-child{
+  margin-bottom: 5px;
+ }
+ 
+
+ .site-subtitle-container img:last-child{
+  margin-bottom: 5px;
+ }
 /* Add this to your style section */
 .control-btn img {
     width: 100%;
