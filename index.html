@@ -1297,44 +1297,53 @@ const FONT_CONFIG = {
             }
 // New function for the subtitle images
 function setSubtitleImages() {
-    // Find the header
-    const headerElement = document.querySelector('.header');
-    if (!headerElement) return;
-    
-    // Create container for subtitle images
-    const subtitleContainer = document.createElement('div');
-    subtitleContainer.className = 'site-subtitle-container';
-    
-    // Add each configured image
-    SUBTITLE_CONFIG.images.forEach(imgConfig => {
-        // Create wrapper to make clickable if link is provided
-        const wrapper = imgConfig.link ? document.createElement('a') : document.createElement('div');
-        
-        if (imgConfig.link) {
-            wrapper.href = imgConfig.link;
-            wrapper.target = "_blank"; // Open in new tab
-        }
-        
-        // Create image element
-        const img = document.createElement('img');
-        img.src = imgConfig.url;
-        img.alt = imgConfig.alt || '';
-        img.className = 'site-subtitle-img';
-        
-        if (imgConfig.maxHeight) {
-            img.style.maxHeight = imgConfig.maxHeight;
-        }
-        
-        // Add image to wrapper
-        wrapper.appendChild(img);
-        
-        // Add wrapper to container
-        subtitleContainer.appendChild(wrapper);
-    });
-    
-    // Append container to header after existing elements
-    headerElement.appendChild(subtitleContainer);
-}
+  // Find the header
+  const headerElement = document.querySelector('.header');
+  if (!headerElement) return;
+ 
+
+  // Create container for subtitle images
+  const subtitleContainer = document.createElement('div');
+  subtitleContainer.className = 'site-subtitle-container';
+ 
+
+  // Add each configured image
+  SUBTITLE_CONFIG.images.forEach(imgConfig => {
+  // Create wrapper to make clickable if link is provided
+  const wrapper = imgConfig.link ? document.createElement('a') : document.createElement('div');
+ 
+
+  if (imgConfig.link) {
+  wrapper.href = imgConfig.link;
+  wrapper.target = "_blank"; // Open in new tab
+  }
+ 
+
+  // Create image element
+  const img = document.createElement('img');
+  img.src = imgConfig.url;
+  img.alt = imgConfig.alt || '';
+  img.className = 'site-subtitle-img';
+ 
+
+  if (imgConfig.maxHeight) {
+  img.style.maxHeight = imgConfig.maxHeight;
+  }
+ 
+
+  // Add image to wrapper
+  wrapper.appendChild(img);
+ 
+
+  // Add wrapper to container
+  subtitleContainer.appendChild(wrapper);
+  });
+ 
+
+  // Append container to header after existing elements
+  headerElement.appendChild(subtitleContainer);
+ }
+ 
 
 // Handle click-to-enter overlay
 function setupEnterOverlay() {
@@ -1376,80 +1385,96 @@ function randomizeAndPlayMusic() {
 
 // Improve video syncing
 // Improved function to maintain video-audio sync when tab is inactive
-function improveVideoSync() {
-    const video = document.getElementById('bg-video');
-    const audioPlayer = document.getElementById('audio-player');
-    
-    if (!video || !audioPlayer) return;
-    
-    // Set the video to have high priority
-    video.setAttribute('importance', 'high');
-    
-    // Add the playsinline attribute to help mobile browsers
-    video.setAttribute('playsinline', '');
-    
-    // Make sure the video won't be throttled
-    video.setAttribute('disablePictureInPicture', '');
-    
-    // Keep track of last play time to detect throttling
-    let lastPlayTime = 0;
-    let syncCheckInterval;
-    
-    // Function to force sync between video and audio
-    const syncVideoWithAudio = () => {
-        if (!isPlaying) return;
-        
-        // If video and audio are out of sync by more than 0.3 seconds
-        if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.3) {
-            // Sync video time to audio time
-            video.currentTime = audioPlayer.currentTime;
-        }
-        
-        // Check if video is paused but audio is playing
-        if (video.paused && !audioPlayer.paused) {
-            video.play().catch(() => {});
-        }
-        
-        // Check if video is being throttled (time hasn't advanced)
-        if (video.currentTime === lastPlayTime && !video.paused) {
-            video.currentTime = audioPlayer.currentTime;
-        }
-        
-        lastPlayTime = video.currentTime;
-    };
-    
-    // Start sync checking when audio plays
-    audioPlayer.addEventListener('play', () => {
-        // Clear any existing interval
-        if (syncCheckInterval) clearInterval(syncCheckInterval);
-        
-        // Create new interval to check sync frequently
-        syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
-        
-        // Initial sync
-        video.currentTime = audioPlayer.currentTime;
-        video.play().catch(() => {});
-    });
-    
-    // Update sync when seeking
-    audioPlayer.addEventListener('seeked', () => {
-        video.currentTime = audioPlayer.currentTime;
-    });
-    
-    // Handle visibility change
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            syncVideoWithAudio();
-        }
-    });
-    
-    // Cleanup interval when audio pauses
-    audioPlayer.addEventListener('pause', () => {
-        if (syncCheckInterval) clearInterval(syncCheckInterval);
-        video.pause();
-    });
-}
-    
+ function improveVideoSync() {
+  const video = document.getElementById('bg-video');
+  const audioPlayer = document.getElementById('audio-player');
+ 
+
+  if (!video || !audioPlayer) return;
+ 
+
+  // Set the video to have high priority
+  video.setAttribute('importance', 'high');
+ 
+
+  // Add the playsinline attribute to help mobile browsers
+  video.setAttribute('playsinline', '');
+ 
+
+  // Make sure the video won't be throttled
+  video.setAttribute('disablePictureInPicture', '');
+ 
+
+  // Keep track of last play time to detect throttling
+  let lastPlayTime = 0;
+  let syncCheckInterval;
+ 
+
+  // Function to force sync between video and audio
+  const syncVideoWithAudio = () => {
+  if (!isPlaying) return;
+ 
+
+  // If video and audio are out of sync by more than 0.3 seconds
+  if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.3) {
+  // Sync video time to audio time
+  video.currentTime = audioPlayer.currentTime;
+  }
+ 
+
+  // Check if video is paused but audio is playing
+  if (video.paused && !audioPlayer.paused) {
+  video.play().catch(() => {});
+  }
+ 
+
+  // Check if video is being throttled (time hasn't advanced)
+  if (video.currentTime === lastPlayTime && !video.paused) {
+  video.currentTime = audioPlayer.currentTime;
+  }
+ 
+
+  lastPlayTime = video.currentTime;
+  };
+ 
+
+  // Start sync checking when audio plays
+  audioPlayer.addEventListener('play', () => {
+  // Clear any existing interval
+  if (syncCheckInterval) clearInterval(syncCheckInterval);
+ 
+
+  // Create new interval to check sync frequently
+  syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
+ 
+
+  // Initial sync
+  video.currentTime = audioPlayer.currentTime;
+  video.play().catch(() => {});
+  });
+ 
+
+  // Update sync when seeking
+  audioPlayer.addEventListener('seeked', () => {
+  video.currentTime = audioPlayer.currentTime;
+  });
+ 
+
+  // Handle visibility change
+  document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+  syncVideoWithAudio();
+  }
+  });
+ 
+
+  // Cleanup interval when audio pauses
+  audioPlayer.addEventListener('pause', () => {
+  if (syncCheckInterval) clearInterval(syncCheckInterval);
+  video.pause();
+  });
+ }
+ 
             // Click Sound Setup
             let soundEnabled = CLICK_SOUND_CONFIG.enabled;
             let lastSoundTime = 0;
@@ -1816,21 +1841,23 @@ function applyCustomFonts() {
             }
         });
     
-        prevBtn.addEventListener('click', () => {
-            currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
-            updateTrackInfo();
-            if (isPlaying) {
-                playAudio();
-            }
-        });
+  prevBtn.addEventListener('click', () => {
+  //currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
+  currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+  updateTrackInfo();
+  if (isPlaying) {
+  playAudio();
+  }
+  });
     
-        nextBtn.addEventListener('click', () => {
-            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
-            updateTrackInfo();
-            if (isPlaying) {
-                playAudio();
-            }
-        });
+ nextBtn.addEventListener('click', () => {
+  //currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+  currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+  updateTrackInfo();
+  if (isPlaying) {
+  playAudio();
+  }
+  });
     
         volumeSlider.addEventListener('input', (e) => {
             volume = e.target.value;
