@@ -444,37 +444,27 @@
     }
     
     /* Header subtitle images style */
-   /* Header subtitle images style */
- .site-subtitle-container {
-  display: flex;
-  align-items: center; /* Vertically align items */
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.7rem;
- }
- 
-
- .site-subtitle-img {
-  max-height: 30px;
-  transition: transform 0.3s ease;
-  vertical-align: middle; /* Vertically align images to the middle */
- }
- 
-
- .site-subtitle-img:hover {
-  transform: scale(1.05);
- }
- 
-
- /*Specific alignments*/
- .site-subtitle-container img:first-child{
-  margin-bottom: 0px;/*fine tune alignments*/
- }
- 
-
- .site-subtitle-container img:last-child{
-  margin-bottom: 0px;/*fine tune alignments*/
- }
+    .site-subtitle-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.7rem;
+    }
+    
+    .site-subtitle-img {
+        max-height: 30px;
+        transition: transform 0.3s ease;
+    }
+    
+    .site-subtitle-img:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Hide the original subtitle text */
+    .header p {
+        display: none;
+    }
 
 /* Add this to your style section */
 .control-btn img {
@@ -978,23 +968,17 @@
                 count: 10 // Number of trail elements
             };
 // Header Subtitle Images Configuration
-const SUBTITLE_CONFIG = {
-    images: [
-        {
-            url: "https://files.catbox.moe/c9ysu1.png", // Replace with your discord image
-            alt: "discord.gg/infected",
-            link: "https://discord.gg/infected", // Your discord link here
-            maxHeight: "40px"
-        },
-        {
-            url: "https://files.catbox.moe/66uar7.png", // Replace with your esex image
-            alt: "4 esex ^_^",
-            link: "", // Leave empty if no link needed
-            maxHeight: "30px"
-        }
-    ]
-};
-    
+ // Header Subtitle Images Configuration
+ const SUBTITLE_CONFIG = {
+  images: [
+  {
+  url: "https://files.catbox.moe/c9ysu1.png", // Replace with your discord image
+  alt: "discord.gg/infected",
+  link: "https://discord.gg/infected", // Your discord link here
+  maxHeight: "40px"
+  }
+  ]
+ };
     // Music Player Button Configuration
     const MUSIC_PLAYER_BUTTONS = {
         play: {
@@ -1835,7 +1819,7 @@ function applyCustomFonts() {
     
             // Setup player controls
           // Update the setupMusicPlayer function with this code
-  function setupMusicPlayer() {
+    function setupMusicPlayer() {
         // Set up button images first
         setupPlayerButtonImages();
         
