@@ -403,6 +403,68 @@
             border-color: var(--accent);
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
         }
+    /* Click to Enter Overlay */
+    #enter-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        cursor: pointer;
+        transition: opacity 1s ease-out;
+    }
+    
+    #enter-text {
+        color: #ffffff;
+        font-size: 2.5rem;
+        font-weight: 600;
+        background: linear-gradient(45deg, var(--accent), #cccccc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 5px rgba(255,255,255,0.2);
+    }
+    
+    #enter-subtext {
+        color: rgba(255,255,255,0.7);
+        font-size: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        #enter-text {
+            font-size: 1.8rem;
+        }
+    }
+    
+    /* Header subtitle images style */
+    .site-subtitle-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.7rem;
+    }
+    
+    .site-subtitle-img {
+        max-height: 30px;
+        transition: transform 0.3s ease;
+    }
+    
+    .site-subtitle-img:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Hide the original subtitle text */
+    .header p {
+        display: none;
+    }
 
 /* Add this to your style section */
 .control-btn img {
@@ -753,6 +815,10 @@
 </head>
 
 <body>
+<div id="enter-overlay">
+    <div id="enter-text">Click to Enter</div>
+    <div id="enter-subtext">Turn on sound for best experience</div>
+</div>
     <noscript>
             <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; font-size: 1.5em;">
                 Please enable JavaScript to continue, you fat retard. Kill yourself.
@@ -901,6 +967,23 @@
                 size: 24, // Size in pixels
                 count: 10 // Number of trail elements
             };
+// Header Subtitle Images Configuration
+const SUBTITLE_CONFIG = {
+    images: [
+        {
+            url: "https://files.catbox.moe/c9ysu1.png", // Replace with your discord image
+            alt: "discord.gg/infected",
+            link: "https://discord.gg/infected", // Your discord link here
+            maxHeight: "30px"
+        },
+        {
+            url: "https://files.catbox.moe/66uar7.png", // Replace with your esex image
+            alt: "4 esex ^_^",
+            link: "", // Leave empty if no link needed
+            maxHeight: "30px"
+        }
+    ]
+};
     
     // Music Player Button Configuration
     const MUSIC_PLAYER_BUTTONS = {
@@ -1212,6 +1295,114 @@ const FONT_CONFIG = {
                     }
                 }
             }
+// New function for the subtitle images
+function setSubtitleImages() {
+    // Find the header
+    const headerElement = document.querySelector('.header');
+    if (!headerElement) return;
+    
+    // Create container for subtitle images
+    const subtitleContainer = document.createElement('div');
+    subtitleContainer.className = 'site-subtitle-container';
+    
+    // Add each configured image
+    SUBTITLE_CONFIG.images.forEach(imgConfig => {
+        // Create wrapper to make clickable if link is provided
+        const wrapper = imgConfig.link ? document.createElement('a') : document.createElement('div');
+        
+        if (imgConfig.link) {
+            wrapper.href = imgConfig.link;
+            wrapper.target = "_blank"; // Open in new tab
+        }
+        
+        // Create image element
+        const img = document.createElement('img');
+        img.src = imgConfig.url;
+        img.alt = imgConfig.alt || '';
+        img.className = 'site-subtitle-img';
+        
+        if (imgConfig.maxHeight) {
+            img.style.maxHeight = imgConfig.maxHeight;
+        }
+        
+        // Add image to wrapper
+        wrapper.appendChild(img);
+        
+        // Add wrapper to container
+        subtitleContainer.appendChild(wrapper);
+    });
+    
+    // Append container to header after existing elements
+    headerElement.appendChild(subtitleContainer);
+}
+
+// Handle click-to-enter overlay
+function setupEnterOverlay() {
+    const overlay = document.getElementById('enter-overlay');
+    if (!overlay) return;
+    
+    overlay.addEventListener('click', () => {
+        // Fade out overlay
+        overlay.style.opacity = '0';
+        
+        // Start music automatically with random track
+        randomizeAndPlayMusic();
+        
+        // Remove overlay after animation completes
+        setTimeout(() => {
+            overlay.remove();
+            
+            // Remove blur from main content
+            document.querySelector('.container').classList.remove('blur-in');
+        }, 1000);
+    });
+}
+
+// Randomize and play music
+function randomizeAndPlayMusic() {
+    // Randomize track index
+    currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+    
+    // Update track info with new random track
+    updateTrackInfo();
+    
+    // Set playing state and update button
+    isPlaying = true;
+    updatePlayButtonState();
+    
+    // Play the audio
+    playAudio();
+}
+
+// Improve video syncing
+function improveVideoSync() {
+    const video = document.getElementById('bg-video');
+    const audioPlayer = document.getElementById('audio-player');
+    
+    // Prevent video from pausing when tab is not active
+    if (video) {
+        video.addEventListener('suspend', () => {
+            if (isPlaying) video.play().catch(() => {});
+        });
+    }
+    
+    // Handle visibility change
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && isPlaying) {
+            // When tab becomes visible again, ensure video is playing if music is playing
+            if (video.paused && !audioPlayer.paused) {
+                video.play().catch(() => {});
+            }
+        }
+    });
+    
+    // Handle situations where video might get unsynced
+    audioPlayer.addEventListener('playing', () => {
+        if (video && video.paused) {
+            video.play().catch(() => {});
+        }
+    });
+}
     
             // Click Sound Setup
             let soundEnabled = CLICK_SOUND_CONFIG.enabled;
@@ -1779,6 +1970,7 @@ function applyCustomFonts() {
                 applyCustomFonts();  // Apply the custom fonts to elements
                 setFavicon();
                 setSiteTitleImage();
+                setSubtitleImages(); 
                 setupCursorTrails();
                 setCursor();
                 setTrails();
@@ -1796,6 +1988,8 @@ function applyCustomFonts() {
                 setupHoverEffects();
                 setupClickRing();
                 initializePaused();
+                setupEnterOverlay(); // New function for enter overlay
+                improveVideoSync(); // New function for better video sync
             });
         </script>
 </body>
