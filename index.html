@@ -367,63 +367,23 @@
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
         }
 
-/* Avatar style */
-.profile-avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: inherit; /* Inherit from the container */
-    background: linear-gradient(45deg, #555555, #777777);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: all 0.3s ease;
-}
-/* Avatar container to hold the avatar and its decoration */
-.avatar-container {
-    position: relative;
-    width: 100px;       /* Same as your avatar width */
-    height: 100px;      /* Same as your avatar height */
-    border-radius: 50%;
-    margin: 0 auto 1.5rem;
-}
-
-/* Avatar style */
-.profile-avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: inherit; /* Inherit from the container */
-    background: linear-gradient(45deg, #555555, #777777);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: all 0.3s ease;
-}
-
-/* Avatar decoration style */
-.avatar-decoration {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none; /* Prevents the decoration from interfering with hover effects */
-}
-/* Avatar container to hold the avatar and its decoration */
-.avatar-container {
-    position: relative;
-    width: 100px;       /* Same as your avatar width */
-    height: 100px;      /* Same as your avatar height */
-    border-radius: 50%;
-    margin: 0 auto 1.5rem;
-}
-
-.profile-card:hover .profile-avatar {
-    transform: scale(1.05);
-    border-color: var(--accent);
-}
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(45deg, #555555, #777777);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid var(--border);
+            transition: all 0.3s ease;
+        }
 
         .profile-card:hover .profile-avatar {
             transform: scale(1.05);
             border-color: var(--accent);
         }
-
 
         /* Profile name styling with background image support */
         .profile-name-container {
@@ -883,12 +843,6 @@ const PROFILES_CONFIG = {
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
-        },
-        avatarDecoration: {
-            image: "https://wound.lol/decorations/cat_ears.png",  // URL for the decoration image
-            size: 70,          // Size of the decoration in percentage relative to avatar
-            offsetX: 0,        // Horizontal offset in percentage
-            offsetY: 0         // Vertical offset in percentage
         },
         links: [
             { text: "GitHub", url: "#", icon: "🌐" },
@@ -1454,55 +1408,119 @@ function setupClickRing() {
 function buildProfileCards() {
     const profilesGrid = document.querySelector('.profiles-grid');
     profilesGrid.innerHTML = ''; // Clear existing content
-
+    
+    // Import custom fonts
+    importCustomFonts();
+    
     // For each profile in the configuration
     Object.keys(PROFILES_CONFIG).forEach(profileId => {
         const profile = PROFILES_CONFIG[profileId];
         const profileNumber = profileId.split('-')[1]; // Extract the number from the ID
-
+        
         // Create profile card
         const card = document.createElement('div');
         card.className = 'profile-card';
         card.id = `profile-card-${profileNumber}`;
-
-        // Create and add avatar container
-        const avatarContainer = document.createElement('div');
-        avatarContainer.className = 'avatar-container';
         
+        // Create and add avatar
         const avatar = document.createElement('div');
         avatar.className = 'profile-avatar';
         avatar.id = profileId;
         avatar.style.backgroundImage = `url(${profile.avatar})`;
-        avatarContainer.appendChild(avatar);
-
-        // Add avatar decoration if configured
-        if (profile.avatarDecoration && profile.avatarDecoration.image) {
-            const decoration = document.createElement('img');
-            decoration.src = profile.avatarDecoration.image;
-            decoration.className = 'avatar-decoration';
-
-            // Apply sizing and positioning
-            const size = profile.avatarDecoration.size || 70;
-            const offsetX = profile.avatarDecoration.offsetX || 0;
-            const offsetY = profile.avatarDecoration.offsetY || 0;
-
-            decoration.style.width = `${size}%`;
-            decoration.style.position = 'absolute';
-
-            // Calculating exact pixel offsets to avoid percentage positioning issues
-            decoration.style.left = `calc(${(50 + offsetX)}% - ${size / 2}% )`;
-            decoration.style.top = `calc(${(50 + offsetY)}% - ${size / 2}% )`;
-
-            avatarContainer.appendChild(decoration);
+        card.appendChild(avatar);
+        
+        // Create name container with background
+        const nameContainer = document.createElement('div');
+        nameContainer.className = 'profile-name-container';
+        nameContainer.id = `${profileId}-name-container`;
+        
+        // Add background image if configured
+        if (profile.nameBg && profile.nameBg.image) {
+            const bgImg = document.createElement('img');
+            bgImg.src = profile.nameBg.image;
+            bgImg.className = 'profile-name-bg';
+            bgImg.style.opacity = profile.nameBg.opacity || 0.7;
+            nameContainer.appendChild(bgImg);
         }
-
-        card.appendChild(avatarContainer);
-
-        // ... rest of the function for name, role, bio, links, etc. ...
-
+        
+        // Add name image or text
+        if (profile.nameImage) {
+            const nameImg = document.createElement('img');
+            nameImg.src = profile.nameImage;
+            nameImg.alt = profile.nameText || `Profile ${profileNumber}`;
+            nameImg.className = 'profile-name-img';
+            nameContainer.appendChild(nameImg);
+            
+            // Add zoom event listeners
+            nameImg.addEventListener('mouseenter', () => nameImg.classList.add('zoom'));
+            nameImg.addEventListener('mouseleave', () => nameImg.classList.remove('zoom'));
+        } else {
+            const nameText = document.createElement('h2');
+            nameText.className = 'profile-name';
+            nameText.textContent = profile.nameText || `Profile ${profileNumber}`;
+            nameContainer.appendChild(nameText);
+            
+            // Add zoom event listeners
+            nameText.addEventListener('mouseenter', () => nameText.classList.add('zoom'));
+            nameText.addEventListener('mouseleave', () => nameText.classList.remove('zoom'));
+        }
+        
+        card.appendChild(nameContainer);
+        
+        // Add role with custom font if specified
+        const role = document.createElement('p');
+        role.className = 'profile-role';
+        role.textContent = profile.role || 'Team Member';
+        if (profile.fonts && profile.fonts.role) {
+            role.style.fontFamily = profile.fonts.role;
+        }
+        card.appendChild(role);
+        
+        // Add bio with custom font if specified
+        const bio = document.createElement('p');
+        bio.className = 'profile-bio';
+        bio.textContent = profile.bio || '';
+        if (profile.fonts && profile.fonts.bio) {
+            bio.style.fontFamily = profile.fonts.bio;
+        }
+        card.appendChild(bio);
+        
+        // Add links
+        const linksContainer = document.createElement('div');
+        linksContainer.className = 'profile-links';
+        
+        if (profile.links && profile.links.length > 0) {
+            profile.links.forEach(link => {
+                const linkElement = document.createElement('a');
+                linkElement.href = link.url || '#';
+                linkElement.className = 'profile-link';
+                
+                // Apply custom font to button if specified
+                if (profile.fonts && profile.fonts.buttons) {
+                    linkElement.style.fontFamily = profile.fonts.buttons;
+                }
+                
+                // Add icon if specified
+                if (link.icon) {
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'link-icon';
+                    iconSpan.textContent = link.icon;
+                    linkElement.appendChild(iconSpan);
+                }
+                
+                // Add text
+                const textSpan = document.createElement('span');
+                textSpan.textContent = link.text || 'Link';
+                linkElement.appendChild(textSpan);
+                
+                linksContainer.appendChild(linkElement);
+            });
+        }
+        
+        card.appendChild(linksContainer);
         profilesGrid.appendChild(card);
     });
-
+    
     // Add hover events for enhanced interactivity
     setupProfileHoverEffects();
 }
