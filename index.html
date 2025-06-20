@@ -168,32 +168,6 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-/* Updated styles for better subtitle image alignment */
-.site-subtitle-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem; /* Consistent spacing between images */
-    margin-top: 0.7rem;
-    position: relative;
-    height: 30px; /* Set fixed height for container */
-}
-
-.site-subtitle-img {
-    max-height: 30px;
-    transition: transform 0.3s ease;
-    display: block; /* Ensures inline elements behave properly */
-    vertical-align: middle; /* Vertical alignment */
-    object-fit: contain; /* Preserves aspect ratio */
-}
-
-/* Add a wrapper for subtitle images to align them perfectly */
-.subtitle-img-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
 
 
         .track-info h3 {
@@ -405,6 +379,32 @@
             flex-direction: column;
             align-items: center;
         }
+/* Updated styles for better subtitle image alignment */
+.site-subtitle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem; /* Consistent spacing between images */
+    margin-top: 0.7rem;
+    position: relative;
+    height: 30px; /* Set fixed height for container */
+}
+
+.site-subtitle-img {
+    max-height: 30px;
+    transition: transform 0.3s ease;
+    display: block; /* Ensures inline elements behave properly */
+    vertical-align: middle; /* Vertical alignment */
+    object-fit: contain; /* Preserves aspect ratio */
+}
+
+/* Add a wrapper for subtitle images to align them perfectly */
+.subtitle-img-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 
 
         .profile-card::before {
@@ -1849,66 +1849,59 @@ function applyCustomFonts() {
     
             // Setup player controls
           // Update the setupMusicPlayer function with this code
- // Modified version of setupMusicPlayer to include random track selection
-function setupMusicPlayer() {
-    const audioPlayer = document.getElementById('audio-player');
-    const prevButton = document.querySelector('.prev-button');
-    const playButton = document.querySelector('.play-button');
-    const nextButton = document.querySelector('.next-button');
-    const volumeSlider = document.querySelector('.volume-slider');
-    
-    // Play/Pause functionality (keep your existing code)
-    if (playButton) {
-        playButton.addEventListener('click', togglePlayback);
-    }
-    
-    // Modified Previous Button - Now selects random tracks
-    if (prevButton) {
-        prevButton.addEventListener('click', function() {
-            // Store current track to avoid repeating
-            const previousTrack = currentTrack;
+    function setupMusicPlayer() {
+        // Set up button images first
+        setupPlayerButtonImages();
+        
+        // Music player controls
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            updatePlayButtonState();
             
-            // Get a random track that's not the current one
-            do {
-                currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
-            } while (currentTrack === previousTrack && MUSIC_TRACKS.length > 1);
-            
+            if (isPlaying) {
+                playAudio();
+            } else {
+                pauseAudio();
+            }
+        });
+    
+        prevBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
             updateTrackInfo();
             if (isPlaying) {
                 playAudio();
             }
         });
-    }
     
-    // Modified Next Button - Now selects random tracks
-    if (nextButton) {
-        nextButton.addEventListener('click', function() {
-            // Store current track to avoid repeating
-            const previousTrack = currentTrack;
-            
-            // Get a random track that's not the current one
-            do {
-                currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
-            } while (currentTrack === previousTrack && MUSIC_TRACKS.length > 1);
-            
+        nextBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
             updateTrackInfo();
             if (isPlaying) {
                 playAudio();
             }
         });
-    }
     
-    // Keep your existing volume control code
-    if (volumeSlider) {
-        volumeSlider.addEventListener('input', function() {
-            const volume = volumeSlider.value / 100;
-            audioPlayer.volume = volume;
+        volumeSlider.addEventListener('input', (e) => {
+            volume = e.target.value;
+            audioPlayer.volume = volume / 100;
+            updateVolumeDisplay();
+        });
+    
+        // Audio player events
+        audioPlayer.addEventListener('ended', () => {
+            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+            updateTrackInfo();
+            if (isPlaying) {
+                playAudio();
+            }
+        });
+    
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            audioPlayer.volume = volume / 100;
             updateVolumeDisplay();
         });
     }
     
-    // Add any other existing code from your setupMusicPlayer function
-}
     // Add these new functions to handle custom button images
     function setupPlayerButtonImages() {
         // Setup play button
