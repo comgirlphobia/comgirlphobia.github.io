@@ -404,42 +404,45 @@
         }
 
 
-        .profile-avatar-container {
-            position: relative;
-            margin: 0 auto 2rem;
-        }
+ .profile-avatar-container {
+    position: relative;
+    margin: 0 auto 2rem;
+    width: 180px;
+    height: 180px;
+}
 
+.profile-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #555555, #777777);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
 
-        .profile-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #555555, #777777);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: 3px solid var(--border);
-            transition: all 0.3s ease;
-        }
+.avatar-decoration {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
-
-        .avatar-decoration {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 60px;
-            height: 60px;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 2;
-        }
-
-
-        .profile-card:hover .profile-avatar {
-            transform: scale(1.05);
-            border-color: var(--accent);
-        }
+.profile-card:hover .profile-avatar-container {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
 
 
         /* Profile name styling with background image support */
@@ -606,13 +609,17 @@
             .profile-card {
                 padding: 2rem 1.5rem;
             }
+            .profile-avatar-container {
+                width: 140px;
+                height: 140px;
+            }
             .profile-avatar {
                 width: 120px;
                 height: 120px;
             }
             .avatar-decoration {
-                width: 40px;
-                height: 40px;
+                width: 140px;
+                height: 140px;
             }
             .profile-name-img {
                 max-width: 180px;
@@ -815,11 +822,11 @@
             count: 10 // Number of trail elements
         };
         
-        // Avatar Decoration Configuration - NEW!
-        const AVATAR_DECORATION_CONFIG = {
-            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png", // Replace with your decoration image URL
-            enabled: true // Set to false to hide the decoration
-        };
+        // Avatar Decoration Configuration - UPDATED!
+const AVATAR_DECORATION_CONFIG = {
+    image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png", // Discord-style frame decoration
+    enabled: true // Set to false to hide the decoration
+}
 
         // Music Tracks Configuration
         const MUSIC_TRACKS = [
