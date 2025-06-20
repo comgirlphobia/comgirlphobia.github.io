@@ -727,6 +727,11 @@ body.has-bgvideo {
     <!-- Dynamic profiles will be inserted here by JavaScript -->
 </div>
     <script>
+       // ============ Enforce HTTPS ============
+       if (location.protocol === 'http:') {
+         location.replace(location.href.replace(/^http:/, 'https:'));
+       }
+        
         // ============ EASY CONFIGURATION SECTION ============
         
         // First Profile Name Background Image Configuration
