@@ -444,6 +444,7 @@
     }
     
     /* Header subtitle images style */
+   /* Header subtitle images style */
  .site-subtitle-container {
   display: flex;
   align-items: center; /* Vertically align items */
@@ -456,6 +457,7 @@
  .site-subtitle-img {
   max-height: 30px;
   transition: transform 0.3s ease;
+  vertical-align: middle; /* Vertically align images to the middle */
  }
  
 
@@ -466,13 +468,14 @@
 
  /*Specific alignments*/
  .site-subtitle-container img:first-child{
-  margin-bottom: 5px;
+  margin-bottom: 0px;/*fine tune alignments*/
  }
  
 
  .site-subtitle-container img:last-child{
-  margin-bottom: 5px;
+  margin-bottom: 0px;/*fine tune alignments*/
  }
+
 /* Add this to your style section */
 .control-btn img {
     width: 100%;
@@ -1832,7 +1835,7 @@ function applyCustomFonts() {
     
             // Setup player controls
           // Update the setupMusicPlayer function with this code
-    function setupMusicPlayer() {
+  function setupMusicPlayer() {
         // Set up button images first
         setupPlayerButtonImages();
         
@@ -1885,6 +1888,7 @@ function applyCustomFonts() {
             updateVolumeDisplay();
         });
     }
+    
     // Add these new functions to handle custom button images
     function setupPlayerButtonImages() {
         // Setup play button
