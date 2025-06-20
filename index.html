@@ -168,6 +168,32 @@
             background-position: center;
             background-repeat: no-repeat;
         }
+/* Updated styles for better subtitle image alignment */
+.site-subtitle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem; /* Consistent spacing between images */
+    margin-top: 0.7rem;
+    position: relative;
+    height: 30px; /* Set fixed height for container */
+}
+
+.site-subtitle-img {
+    max-height: 30px;
+    transition: transform 0.3s ease;
+    display: block; /* Ensures inline elements behave properly */
+    vertical-align: middle; /* Vertical alignment */
+    object-fit: contain; /* Preserves aspect ratio */
+}
+
+/* Add a wrapper for subtitle images to align them perfectly */
+.subtitle-img-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 
 
         .track-info h3 {
@@ -1309,11 +1335,34 @@ function setSubtitleImages() {
     SUBTITLE_CONFIG.images.forEach(imgConfig => {
         // Create wrapper to make clickable if link is provided
         const wrapper = imgConfig.link ? document.createElement('a') : document.createElement('div');
+        wrapper.className = 'subtitle-img-wrapper';
         
         if (imgConfig.link) {
             wrapper.href = imgConfig.link;
             wrapper.target = "_blank"; // Open in new tab
         }
+        
+        // Create image element
+        const img = document.createElement('img');
+        img.src = imgConfig.url;
+        img.alt = imgConfig.alt || '';
+        img.className = 'site-subtitle-img';
+        
+        // We're now specifying height in the container
+        if (imgConfig.maxHeight) {
+            img.style.maxHeight = imgConfig.maxHeight;
+        }
+        
+        // Add image to wrapper
+        wrapper.appendChild(img);
+        
+        // Add wrapper to container
+        subtitleContainer.appendChild(wrapper);
+    });
+    
+    // Append container to header after existing elements
+    headerElement.appendChild(subtitleContainer);
+}
         
         // Create image element
         const img = document.createElement('img');
@@ -1375,32 +1424,78 @@ function randomizeAndPlayMusic() {
 }
 
 // Improve video syncing
+// Improved function to maintain video-audio sync when tab is inactive
 function improveVideoSync() {
     const video = document.getElementById('bg-video');
     const audioPlayer = document.getElementById('audio-player');
     
-    // Prevent video from pausing when tab is not active
-    if (video) {
-        video.addEventListener('suspend', () => {
-            if (isPlaying) video.play().catch(() => {});
-        });
-    }
+    if (!video || !audioPlayer) return;
+    
+    // Set the video to have high priority
+    video.setAttribute('importance', 'high');
+    
+    // Add the playsinline attribute to help mobile browsers
+    video.setAttribute('playsinline', '');
+    
+    // Make sure the video won't be throttled
+    video.setAttribute('disablePictureInPicture', '');
+    
+    // Keep track of last play time to detect throttling
+    let lastPlayTime = 0;
+    let syncCheckInterval;
+    
+    // Function to force sync between video and audio
+    const syncVideoWithAudio = () => {
+        if (!isPlaying) return;
+        
+        // If video and audio are out of sync by more than 0.3 seconds
+        if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.3) {
+            // Sync video time to audio time
+            video.currentTime = audioPlayer.currentTime;
+        }
+        
+        // Check if video is paused but audio is playing
+        if (video.paused && !audioPlayer.paused) {
+            video.play().catch(() => {});
+        }
+        
+        // Check if video is being throttled (time hasn't advanced)
+        if (video.currentTime === lastPlayTime && !video.paused) {
+            video.currentTime = audioPlayer.currentTime;
+        }
+        
+        lastPlayTime = video.currentTime;
+    };
+    
+    // Start sync checking when audio plays
+    audioPlayer.addEventListener('play', () => {
+        // Clear any existing interval
+        if (syncCheckInterval) clearInterval(syncCheckInterval);
+        
+        // Create new interval to check sync frequently
+        syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
+        
+        // Initial sync
+        video.currentTime = audioPlayer.currentTime;
+        video.play().catch(() => {});
+    });
+    
+    // Update sync when seeking
+    audioPlayer.addEventListener('seeked', () => {
+        video.currentTime = audioPlayer.currentTime;
+    });
     
     // Handle visibility change
     document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible' && isPlaying) {
-            // When tab becomes visible again, ensure video is playing if music is playing
-            if (video.paused && !audioPlayer.paused) {
-                video.play().catch(() => {});
-            }
+        if (document.visibilityState === 'visible') {
+            syncVideoWithAudio();
         }
     });
     
-    // Handle situations where video might get unsynced
-    audioPlayer.addEventListener('playing', () => {
-        if (video && video.paused) {
-            video.play().catch(() => {});
-        }
+    // Cleanup interval when audio pauses
+    audioPlayer.addEventListener('pause', () => {
+        if (syncCheckInterval) clearInterval(syncCheckInterval);
+        video.pause();
     });
 }
     
@@ -1754,59 +1849,66 @@ function applyCustomFonts() {
     
             // Setup player controls
           // Update the setupMusicPlayer function with this code
-    function setupMusicPlayer() {
-        // Set up button images first
-        setupPlayerButtonImages();
-        
-        // Music player controls
-        playBtn.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            updatePlayButtonState();
+ // Modified version of setupMusicPlayer to include random track selection
+function setupMusicPlayer() {
+    const audioPlayer = document.getElementById('audio-player');
+    const prevButton = document.querySelector('.prev-button');
+    const playButton = document.querySelector('.play-button');
+    const nextButton = document.querySelector('.next-button');
+    const volumeSlider = document.querySelector('.volume-slider');
+    
+    // Play/Pause functionality (keep your existing code)
+    if (playButton) {
+        playButton.addEventListener('click', togglePlayback);
+    }
+    
+    // Modified Previous Button - Now selects random tracks
+    if (prevButton) {
+        prevButton.addEventListener('click', function() {
+            // Store current track to avoid repeating
+            const previousTrack = currentTrack;
             
-            if (isPlaying) {
-                playAudio();
-            } else {
-                pauseAudio();
-            }
-        });
-    
-        prevBtn.addEventListener('click', () => {
-            currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
+            // Get a random track that's not the current one
+            do {
+                currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+            } while (currentTrack === previousTrack && MUSIC_TRACKS.length > 1);
+            
             updateTrackInfo();
             if (isPlaying) {
                 playAudio();
             }
         });
+    }
     
-        nextBtn.addEventListener('click', () => {
-            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+    // Modified Next Button - Now selects random tracks
+    if (nextButton) {
+        nextButton.addEventListener('click', function() {
+            // Store current track to avoid repeating
+            const previousTrack = currentTrack;
+            
+            // Get a random track that's not the current one
+            do {
+                currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+            } while (currentTrack === previousTrack && MUSIC_TRACKS.length > 1);
+            
             updateTrackInfo();
             if (isPlaying) {
                 playAudio();
             }
         });
+    }
     
-        volumeSlider.addEventListener('input', (e) => {
-            volume = e.target.value;
-            audioPlayer.volume = volume / 100;
-            updateVolumeDisplay();
-        });
-    
-        // Audio player events
-        audioPlayer.addEventListener('ended', () => {
-            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
-            updateTrackInfo();
-            if (isPlaying) {
-                playAudio();
-            }
-        });
-    
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            audioPlayer.volume = volume / 100;
+    // Keep your existing volume control code
+    if (volumeSlider) {
+        volumeSlider.addEventListener('input', function() {
+            const volume = volumeSlider.value / 100;
+            audioPlayer.volume = volume;
             updateVolumeDisplay();
         });
     }
     
+    // Add any other existing code from your setupMusicPlayer function
+}
     // Add these new functions to handle custom button images
     function setupPlayerButtonImages() {
         // Setup play button
