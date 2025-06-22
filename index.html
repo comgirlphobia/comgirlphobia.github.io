@@ -4,821 +4,822 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>>,..,<</title>
-    <!-- Favicon will be set dynamically via JavaScript -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+    <title>>,..,
+        <</title>
+            <!-- Favicon will be set dynamically via JavaScript -->
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+                
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        
+                :root {
+                    --primary-bg: #0f0f0f;
+                    --secondary-bg: #1a1a1a;
+                    --accent: #ffffff;
+                    --accent-hover: #e0e0e0;
+                    --text: #ffffff;
+                    --text-dim: #888888;
+                    --border: #333333;
+                    --card-bg: #171717;
+                }
+        
+        
+                body {
+                    font-family: 'JetBrains Mono', monospace;
+                    background: linear-gradient(135deg, var(--primary-bg), #1f1f1f);
+                    color: var(--text);
+                    overflow-x: hidden;
+                }
+        
+        
+                * {
+                    cursor: none !important;
+                }
+        
+        
+                /* Custom Cursor */
+                .cursor {
+                    position: fixed;
+                    width: 18px;
+                    height: 18px;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    pointer-events: none;
+                    z-index: 99999;
+                    transition: transform 0.1s ease;
+                    border-radius: 50%;
+                    background-color: #ffffff;
+                }
+        
+        
+                .cursor-trail {
+                    position: fixed;
+                    width: 15px;
+                    height: 15px;
+                    background: #ff69b4;
+                    pointer-events: none;
+                    z-index: 99998;
+                    opacity: 0.6;
+                    transition: opacity 0.3s ease;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+        
+        
+                /* Blur-in Animation */
+                .blur-in {
+                    animation: blurIn 1.5s ease-out forwards;
+                    filter: blur(10px);
+                    opacity: 0;
+                }
+        
+        
+                @keyframes blurIn {
+                    to {
+                        filter: blur(0);
+                        opacity: 1;
+                    }
+                }
+        
+        
+                /* Main Container */
+                .container {
+                    min-height: 100vh;
+                    padding: 2rem;
+                    padding-top: 1rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1.5rem;
+                }
+        
+        
+                /* Header */
+                .header {
+                    text-align: center;
+                    margin-bottom: 0.5rem;
+                    margin-top: 1rem;
+                }
+        
+        
+                .header h1 {
+                    font-size: 3rem;
+                    font-weight: 600;
+                    background: linear-gradient(45deg, var(--accent), #cccccc);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin-bottom: 0.5rem;
+                }
+        
+        
+                .site-title-img {
+                    max-width: 300px;
+                    max-height: 100px;
+                    margin-bottom: 1rem;
+                }
+        
+        
+                .header p {
+                    color: var(--text-dim);
+                    font-size: 1.1rem;
+                }
+        
+        
+                /* Music Player */
+                .music-player {
+                    position: fixed;
+                    top: 1.5rem;
+                    left: 1.5rem;
+                    background: rgba(23, 23, 23, 0.95);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    padding: 1rem;
+                    min-width: 280px;
+                    max-width: 320px;
+                    z-index: 1000;
+                }
+        
+        
+                .player-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    margin-bottom: 0.75rem;
+                }
+        
+        
+                .album-art {
+                    width: 40px;
+                    height: 40px;
+                    background: linear-gradient(45deg, #555555, #777777);
+                    border-radius: 6px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2rem;
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                }
+        
+        
+                .track-info h3 {
+                    font-size: 0.8rem;
+                    margin-bottom: 0.2rem;
+                    line-height: 1.2;
+                }
+        
+        
+                .track-info p {
+                    font-size: 0.7rem;
+                    color: var(--text-dim);
+                    line-height: 1.2;
+                }
+        
+        
+                .player-controls {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.75rem;
+                    margin-bottom: 1rem;
+                }
+        
+        
+                .control-btn {
+                    background: none;
+                    border: none;
+                    color: var(--text);
+                    font-size: 1rem;
+                    padding: 0.4rem;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+        
+        
+        .control-btn {
+            position: relative;
+            overflow: visible;
         }
-
-
-        :root {
-            --primary-bg: #0f0f0f;
-            --secondary-bg: #1a1a1a;
-            --accent: #ffffff;
-            --accent-hover: #e0e0e0;
-            --text: #ffffff;
-            --text-dim: #888888;
-            --border: #333333;
-            --card-bg: #171717;
-        }
-
-
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background: linear-gradient(135deg, var(--primary-bg), #1f1f1f);
-            color: var(--text);
-            overflow-x: hidden;
-        }
-
-
-        * {
-            cursor: none !important;
-        }
-
-
-        /* Custom Cursor */
-        .cursor {
-            position: fixed;
-            width: 18px;
-            height: 18px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            pointer-events: none;
-            z-index: 99999;
-            transition: transform 0.1s ease;
+        
+        
+        /* The circular glow is created by a pseudo-element, only visible when parent has .glow */
+        .control-btn.glow::before {
+            content: '';
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: var(--glow-size, 54px);
+            height: var(--glow-size, 54px);
             border-radius: 50%;
-            background-color: #ffffff;
-        }
-
-
-        .cursor-trail {
-            position: fixed;
-            width: 15px;
-            height: 15px;
-            background: #ff69b4;
+            background: radial-gradient(circle, var(--accent) 45%, transparent 70%);
+            opacity: 0.34;
+            z-index: 0; /* beneath icon */
+            animation: glowing-circ 0.6s cubic-bezier(0.6, 0.09, 0.4, 1);
             pointer-events: none;
-            z-index: 99998;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
         }
-
-
-        /* Blur-in Animation */
-        .blur-in {
-            animation: blurIn 1.5s ease-out forwards;
-            filter: blur(10px);
-            opacity: 0;
-        }
-
-
-        @keyframes blurIn {
-            to {
-                filter: blur(0);
+        
+        
+        @keyframes glowing-circ {
+            0% {
                 opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            70% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1.13);
+            }
+            100% {
+                opacity: 0.34;
+                transform: translate(-50%, -50%) scale(1);
             }
         }
-
-
-        /* Main Container */
-        .container {
-            min-height: 100vh;
-            padding: 2rem;
-            padding-top: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
+        
+        
+        /* Ensure button content is above the glow */
+        .control-btn > * {
+            position: relative;
+            z-index: 1;
         }
-
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
+        
+        
+                .play-btn {
+                    background: var(--accent);
+                    color: var(--primary-bg);
+                    font-size: 1.1rem;
+                    padding: 0.5rem;
+                    border-radius: 6px;
+                    min-width: 32px;
+                    height: 32px;
+                }
+        
+        
+                .play-btn:hover {
+                    background: var(--accent-hover);
+                    color: var(--primary-bg);
+                }
+        
+        
+                /* Volume Control */
+                .volume-control {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+        
+        
+                .volume-icon {
+                    font-size: 0.9rem;
+                    color: var(--text-dim);
+                    min-width: 20px;
+                }
+        
+        
+                .volume-slider-container {
+                    flex: 1;
+                    position: relative;
+                }
+        
+        
+                .volume-slider {
+                    width: 100%;
+                    height: 4px;
+                    background: var(--border);
+                    border-radius: 2px;
+                    outline: none;
+                    appearance: none;
+                    cursor: none;
+                    position: relative;
+                }
+        
+        
+                .volume-slider::-webkit-slider-track {
+                    width: 100%;
+                    height: 4px;
+                    background: var(--border);
+                    border-radius: 2px;
+                }
+        
+        
+                .volume-slider::-webkit-slider-thumb {
+                    appearance: none;
+                    width: 16px;
+                    height: 16px;
+                    background: var(--accent);
+                    border-radius: 50%;
+                    cursor: none;
+                    position: relative;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                }
+        
+        
+                .volume-slider::-moz-range-track {
+                    width: 100%;
+                    height: 4px;
+                    background: var(--border);
+                    border-radius: 2px;
+                    border: none;
+                }
+        
+        
+                .volume-slider::-moz-range-thumb {
+                    width: 16px;
+                    height: 16px;
+                    background: var(--accent);
+                    border-radius: 50%;
+                    cursor: none;
+                    border: none;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                }
+        
+        
+                .volume-fill {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 4px;
+                    background: var(--accent);
+                    border-radius: 2px;
+                    pointer-events: none;
+                    transition: width 0.1s ease;
+                }
+        
+        
+                .volume-percent {
+                    font-size: 0.7rem;
+                    color: var(--text-dim);
+                    min-width: 30px;
+                    text-align: right;
+                }
+        
+        
+                /* Single Centered Profile */
+                .profile-card {
+                    background: rgba(23, 23, 23, 0.9);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid var(--border);
+                    border-radius: 20px;
+                    padding: 3rem;
+                    text-align: center;
+                    transition: all 0.4s ease;
+                    position: relative;
+                    overflow: hidden;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+        
+        
+                .profile-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+                    transition: left 0.5s ease;
+                }
+        
+        
+                .profile-card:hover::before {
+                    left: 100%;
+                }
+        
+        
+                .profile-card:hover {
+                    transform: translateY(-10px);
+                    border-color: var(--accent);
+                    box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+                }
+            /* Click to Enter Overlay */
+            #enter-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.85);
+                backdrop-filter: blur(10px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                cursor: pointer;
+                transition: opacity 1s ease-out;
+            }
+            
+            #enter-text {
+                color: #ffffff;
+                font-size: 2.5rem;
+                font-weight: 600;
+                background: linear-gradient(45deg, var(--accent), #cccccc);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 1rem;
+                text-shadow: 0 0 5px rgba(255,255,255,0.2);
+            }
+            
+            #enter-subtext {
+                color: rgba(255,255,255,0.7);
+                font-size: 1rem;
+            }
+            
+            @media (max-width: 768px) {
+                #enter-text {
+                    font-size: 1.8rem;
+                }
+            }
+            
+            /* Header subtitle images style */
+            .site-subtitle-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-top: 0.4rem;
+            }
+            
+            .site-subtitle-img {
+                max-height: 30px;
+                transition: transform 0.3s ease;
+            }
+            
+            .site-subtitle-img:hover {
+                transform: scale(1.05);
+            }
+            
+            /* Hide the original subtitle text */
+            .header p {
+                display: none;
+            }
+        
+        /* Add this to your style section */
+        .control-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
         }
-
-
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 600;
-            background: linear-gradient(45deg, var(--accent), #cccccc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-
-        .site-title-img {
-            max-width: 300px;
-            max-height: 100px;
-            margin-bottom: 1rem;
-        }
-
-
-        .header p {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-        }
-
-
-        /* Music Player */
-        .music-player {
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            background: rgba(23, 23, 23, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem;
-            min-width: 280px;
-            max-width: 320px;
-            z-index: 1000;
-        }
-
-
-        .player-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-
-        .album-art {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #555555, #777777);
-            border-radius: 6px;
+        
+        .control-btn.with-image {
+            font-size: 0;
+            width: var(--btn-size, 32px);
+            height: var(--btn-size, 32px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .play-btn.with-image {
+            background: transparent;
+        }
+        
+        /* Ensure glow effect works with image buttons */
+        .control-btn.with-image.glow::before {
+            content: '';
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: calc(var(--btn-size, 32px) * 1.7);
+            height: calc(var(--btn-size, 32px) * 1.7);
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent) 45%, transparent 70%);
+            opacity: 0.34;
+            z-index: 0;
+            animation: glowing-circ 0.6s cubic-bezier(0.6, 0.09, 0.4, 1);
+            pointer-events: none;
+        }
+         /* Updated Avatar and Decoration CSS */
+        .profile-avatar-container {
+            position: relative;
+            margin: 0 auto 2rem;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .profile-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #555555, #777777);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-        }
-
-
-        .track-info h3 {
-            font-size: 0.8rem;
-            margin-bottom: 0.2rem;
-            line-height: 1.2;
-        }
-
-
-        .track-info p {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            line-height: 1.2;
-        }
-
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 1rem;
-            padding: 0.4rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-.control-btn {
-    position: relative;
-    overflow: visible;
-}
-
-
-/* The circular glow is created by a pseudo-element, only visible when parent has .glow */
-.control-btn.glow::before {
-    content: '';
-    position: absolute;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    width: var(--glow-size, 54px);
-    height: var(--glow-size, 54px);
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--accent) 45%, transparent 70%);
-    opacity: 0.34;
-    z-index: 0; /* beneath icon */
-    animation: glowing-circ 0.6s cubic-bezier(0.6, 0.09, 0.4, 1);
-    pointer-events: none;
-}
-
-
-@keyframes glowing-circ {
-    0% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(0.5);
-    }
-    70% {
-        opacity: 0.6;
-        transform: translate(-50%, -50%) scale(1.13);
-    }
-    100% {
-        opacity: 0.34;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-
-/* Ensure button content is above the glow */
-.control-btn > * {
-    position: relative;
-    z-index: 1;
-}
-
-
-        .play-btn {
-            background: var(--accent);
-            color: var(--primary-bg);
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            min-width: 32px;
-            height: 32px;
-        }
-
-
-        .play-btn:hover {
-            background: var(--accent-hover);
-            color: var(--primary-bg);
-        }
-
-
-        /* Volume Control */
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-
-        .volume-icon {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            min-width: 20px;
-        }
-
-
-        .volume-slider-container {
-            flex: 1;
+            z-index: 1;
             position: relative;
         }
-
-
-        .volume-slider {
-            width: 100%;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            outline: none;
-            appearance: none;
-            cursor: none;
-            position: relative;
-        }
-
-
-        .volume-slider::-webkit-slider-track {
-            width: 100%;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-        }
-
-
-        .volume-slider::-webkit-slider-thumb {
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: none;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-
-        .volume-slider::-moz-range-track {
-            width: 100%;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            border: none;
-        }
-
-
-        .volume-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: none;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-
-        .volume-fill {
+        
+        .avatar-decoration {
             position: absolute;
             top: 0;
             left: 0;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 2px;
-            pointer-events: none;
-            transition: width 0.1s ease;
-        }
-
-
-        .volume-percent {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            min-width: 30px;
-            text-align: right;
-        }
-
-
-        /* Single Centered Profile */
-        .profile-card {
-            background: rgba(23, 23, 23, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 3rem;
-            text-align: center;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transition: left 0.5s ease;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 2;
+            pointer-events: none;
         }
-
-
-        .profile-card:hover::before {
-            left: 100%;
-        }
-
-
-        .profile-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
-        }
-    /* Click to Enter Overlay */
-    #enter-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(10px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        cursor: pointer;
-        transition: opacity 1s ease-out;
-    }
-    
-    #enter-text {
-        color: #ffffff;
-        font-size: 2.5rem;
-        font-weight: 600;
-        background: linear-gradient(45deg, var(--accent), #cccccc);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
-        text-shadow: 0 0 5px rgba(255,255,255,0.2);
-    }
-    
-    #enter-subtext {
-        color: rgba(255,255,255,0.7);
-        font-size: 1rem;
-    }
-    
-    @media (max-width: 768px) {
-        #enter-text {
-            font-size: 1.8rem;
-        }
-    }
-    
-    /* Header subtitle images style */
-    .site-subtitle-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 0.4rem;
-    }
-    
-    .site-subtitle-img {
-        max-height: 30px;
-        transition: transform 0.3s ease;
-    }
-    
-    .site-subtitle-img:hover {
-        transform: scale(1.05);
-    }
-    
-    /* Hide the original subtitle text */
-    .header p {
-        display: none;
-    }
-
-/* Add this to your style section */
-.control-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-}
-
-.control-btn.with-image {
-    font-size: 0;
-    width: var(--btn-size, 32px);
-    height: var(--btn-size, 32px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.play-btn.with-image {
-    background: transparent;
-}
-
-/* Ensure glow effect works with image buttons */
-.control-btn.with-image.glow::before {
-    content: '';
-    position: absolute;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    width: calc(var(--btn-size, 32px) * 1.7);
-    height: calc(var(--btn-size, 32px) * 1.7);
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--accent) 45%, transparent 70%);
-    opacity: 0.34;
-    z-index: 0;
-    animation: glowing-circ 0.6s cubic-bezier(0.6, 0.09, 0.4, 1);
-    pointer-events: none;
-}
- /* Updated Avatar and Decoration CSS */
-.profile-avatar-container {
-    position: relative;
-    margin: 0 auto 2rem;
-    width: 200px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-avatar {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #555555, #777777);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 1;
-    position: relative;
-}
-
-.avatar-decoration {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.profile-card:hover .profile-avatar-container {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}
-
-/* Update for responsive design */
-@media (max-width: 768px) {
-    .profile-avatar-container {
-        width: 170px;
-        height: 170px;
-    }
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-    }
-}
-
-
-        /* Profile name styling with background image support */
-        .profile-name-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            overflow: hidden;
-            border-radius: 8px;
-            width: 100%;
-        }
-
-
-        .profile-name-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-            width: 60%;
-            height: 60%;
-            object-fit: cover;
-            z-index: 0;
-            opacity: 0.7;
-        }
-
-
-        .profile-name {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
-        }
-
-
-        .profile-name-img {
-            max-width: 280px;
-            max-height: 100px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-
-        .profile-role {
-            color: var(--text-dim);
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-        }
-
-
-        .profile-bio {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            color: var(--text-dim);
-            max-width: 90%;
-        }
-
-
-        .profile-links {
-            display: flex;
-            gap: 1.2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 0.5rem;
-        }
-
-
-        .profile-link {
-            padding: 0.8rem 1.2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--accent);
-            border-radius: 25px;
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-        }
-
-
-        .profile-link:hover {
-            background: var(--accent);
-            color: var(--primary-bg);
+        
+        .profile-card:hover .profile-avatar-container {
             transform: scale(1.05);
+            transition: transform 0.3s ease;
         }
-
-
-        /* Sound control button */
-        .sound-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(23, 23, 23, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
-            font-size: 1.2rem;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-
-        .sound-control:hover {
-            transform: scale(1.1);
-            background: var(--accent);
-            color: var(--primary-bg);
-        }
-
-
-        /* Link icon (configurable with images) */
-        .link-icon {
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-        .link-icon img {
-            width: 20px;
-            height: 20px;
-            object-fit: contain;
-        }
-
-
-        /* Responsive */
+        
+        /* Update for responsive design */
         @media (max-width: 768px) {
-            .header h1 { 
-                font-size: 2rem; 
-            }
-            .site-title-img {
-                max-width: 220px;
-            }
-            .music-player { 
-                position: relative;
-                top: 0;
-                left: 0;
-                margin-bottom: 2rem;
-                min-width: 260px;
-                max-width: 280px;
-            }
-            .container {
-                padding-top: 2rem;
-            }
-            .header {
-                margin-top: 0;
-            }
-            .profile-card {
-                padding: 2rem 1.5rem;
-            }
             .profile-avatar-container {
-                width: 140px;
-                height: 140px;
+                width: 170px;
+                height: 170px;
             }
             .profile-avatar {
                 width: 120px;
                 height: 120px;
             }
-            .avatar-decoration {
-                width: 140px;
-                height: 140px;
-            }
-            .profile-name-img {
-                max-width: 180px;
-            }
-            .profile-bio {
-                font-size: 0.95rem;
-            }
         }
-
-
-        @media (max-width: 1200px) {
-            .profile-card {
-                max-width: 90%;
-            }
-        }
-
-
-        /* Title Zoom for profile */
-        .profile-name-img.zoom,
-        .profile-name.zoom {
-            transition: transform 0.2s cubic-bezier(0.25,0.1,0.35,1.6);
-            transform: scale(1.15);
-        }
-        .profile-name-img,
-        .profile-name {
-            transition: transform 0.18s cubic-bezier(0.16,0.68,0.47,1.73);
-        }
-
-
-        /* Click Ring Animation */
-        #click-ring-effect {
-            pointer-events: none;
-            position: fixed;
-            left: 0; top: 0;
-        }
-        .ring {
-            position: absolute;
-            border-radius: 50%;
-            border: none;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            animation: rippleClickAnim var(--ring-duration,0.7s) ease;
-        }
-
-
-        @keyframes rippleClickAnim {
-            from {
-                opacity: 0.55;
-                width: 0px;
-                height: 0px;
-            }
-            to {
-                opacity: 0;
-                width: var(--ring-radius,80px);
-                height: var(--ring-radius,80px);
-            }
-        }
-        #bg-video {
-            position: fixed;
-            left: 0; top: 0;
-            min-width: 100vw;
-            min-height: 100vh;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: -1;
-            background: #000;
-            pointer-events: none;
-            opacity: 1;
-            transition: opacity 0.5s;
-        }
-        body.has-bgvideo {
-            background: none !important;
-        }
-
-        video::-internal-media-controls-overlay-cast-button,
-        video::-internal-media-controls-pip-button {
-            display: none !important;
-        }
-    </style>
+        
+        
+                /* Profile name styling with background image support */
+                .profile-name-container {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                    padding: 0.8rem;
+                    overflow: hidden;
+                    border-radius: 8px;
+                    width: 100%;
+                }
+        
+        
+                .profile-name-bg {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    margin: auto;
+                    width: 60%;
+                    height: 60%;
+                    object-fit: cover;
+                    z-index: 0;
+                    opacity: 0.7;
+                }
+        
+        
+                .profile-name {
+                    font-size: 2rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    position: relative;
+                    z-index: 1;
+                    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+                }
+        
+        
+                .profile-name-img {
+                    max-width: 280px;
+                    max-height: 100px;
+                    margin: 0 auto;
+                    position: relative;
+                    z-index: 1;
+                }
+        
+        
+                .profile-role {
+                    color: var(--text-dim);
+                    margin-bottom: 1.5rem;
+                    font-size: 1.2rem;
+                }
+        
+        
+                .profile-bio {
+                    font-size: 1.1rem;
+                    line-height: 1.6;
+                    margin-bottom: 2rem;
+                    color: var(--text-dim);
+                    max-width: 90%;
+                }
+        
+        
+                .profile-links {
+                    display: flex;
+                    gap: 1.2rem;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    margin-top: 0.5rem;
+                }
+        
+        
+                .profile-link {
+                    padding: 0.8rem 1.2rem;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid var(--accent);
+                    border-radius: 25px;
+                    color: var(--accent);
+                    text-decoration: none;
+                    font-size: 1rem;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.7rem;
+                }
+        
+        
+                .profile-link:hover {
+                    background: var(--accent);
+                    color: var(--primary-bg);
+                    transform: scale(1.05);
+                }
+        
+        
+                /* Sound control button */
+                .sound-control {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 40px;
+                    height: 40px;
+                    background: rgba(23, 23, 23, 0.9);
+                    border: 1px solid var(--border);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--text);
+                    font-size: 1.2rem;
+                    z-index: 1000;
+                    transition: all 0.3s ease;
+                }
+        
+        
+                .sound-control:hover {
+                    transform: scale(1.1);
+                    background: var(--accent);
+                    color: var(--primary-bg);
+                }
+        
+        
+                /* Link icon (configurable with images) */
+                .link-icon {
+                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+        
+        
+                .link-icon img {
+                    width: 20px;
+                    height: 20px;
+                    object-fit: contain;
+                }
+        
+        
+                /* Responsive */
+                @media (max-width: 768px) {
+                    .header h1 { 
+                        font-size: 2rem; 
+                    }
+                    .site-title-img {
+                        max-width: 220px;
+                    }
+                    .music-player { 
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        margin-bottom: 2rem;
+                        min-width: 260px;
+                        max-width: 280px;
+                    }
+                    .container {
+                        padding-top: 2rem;
+                    }
+                    .header {
+                        margin-top: 0;
+                    }
+                    .profile-card {
+                        padding: 2rem 1.5rem;
+                    }
+                    .profile-avatar-container {
+                        width: 140px;
+                        height: 140px;
+                    }
+                    .profile-avatar {
+                        width: 120px;
+                        height: 120px;
+                    }
+                    .avatar-decoration {
+                        width: 140px;
+                        height: 140px;
+                    }
+                    .profile-name-img {
+                        max-width: 180px;
+                    }
+                    .profile-bio {
+                        font-size: 0.95rem;
+                    }
+                }
+        
+        
+                @media (max-width: 1200px) {
+                    .profile-card {
+                        max-width: 90%;
+                    }
+                }
+        
+        
+                /* Title Zoom for profile */
+                .profile-name-img.zoom,
+                .profile-name.zoom {
+                    transition: transform 0.2s cubic-bezier(0.25,0.1,0.35,1.6);
+                    transform: scale(1.15);
+                }
+                .profile-name-img,
+                .profile-name {
+                    transition: transform 0.18s cubic-bezier(0.16,0.68,0.47,1.73);
+                }
+        
+        
+                /* Click Ring Animation */
+                #click-ring-effect {
+                    pointer-events: none;
+                    position: fixed;
+                    left: 0; top: 0;
+                }
+                .ring {
+                    position: absolute;
+                    border-radius: 50%;
+                    border: none;
+                    pointer-events: none;
+                    transform: translate(-50%, -50%);
+                    animation: rippleClickAnim var(--ring-duration,0.7s) ease;
+                }
+        
+        
+                @keyframes rippleClickAnim {
+                    from {
+                        opacity: 0.55;
+                        width: 0px;
+                        height: 0px;
+                    }
+                    to {
+                        opacity: 0;
+                        width: var(--ring-radius,80px);
+                        height: var(--ring-radius,80px);
+                    }
+                }
+                #bg-video {
+                    position: fixed;
+                    left: 0; top: 0;
+                    min-width: 100vw;
+                    min-height: 100vh;
+                    width: 100vw;
+                    height: 100vh;
+                    object-fit: cover;
+                    z-index: -1;
+                    background: #000;
+                    pointer-events: none;
+                    opacity: 1;
+                    transition: opacity 0.5s;
+                }
+                body.has-bgvideo {
+                    background: none !important;
+                }
+        
+                video::-internal-media-controls-overlay-cast-button,
+                video::-internal-media-controls-pip-button {
+                    display: none !important;
+                }
+            </style>
 </head>
 
 <body>
-<div id="enter-overlay">
-    <div id="enter-text">Click to Enter</div>
-    <div id="enter-subtext">Turn on sound for best experience</div>
-</div>
+    <div id="enter-overlay">
+        <div id="enter-text">Click to Enter</div>
+        <div id="enter-subtext">Turn on sound for best experience</div>
+    </div>
     <noscript>
             <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; font-size: 1.5em;">
                 Please enable JavaScript to continue, you fat retard. Kill yourself.
@@ -917,7 +918,7 @@
                     if (dfgh2f2 - hce32s > 50) {
                         alert("Inspection is disabled.\nBlehhhh.");
                     }
-                }, 150);
+                }, 250);
             })();
             
             // ============ EASY CONFIGURATION SECTION ============
@@ -1423,6 +1424,10 @@ function randomizeAndPlayMusic() {
 // Improved function to maintain video-audio sync when tab is inactive
  function improveVideoSync() {
   const video = document.getElementById('bg-video');
+video.setAttribute('playsinline', 'true');
+video.setAttribute('preload', 'auto');
+video.setAttribute('disableRemotePlayback', 'true');
+video.setAttribute('crossorigin', 'anonymous');
   const audioPlayer = document.getElementById('audio-player');
  
 
@@ -1452,9 +1457,10 @@ function randomizeAndPlayMusic() {
  
 
   // If video and audio are out of sync by more than 0.3 seconds
-  if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.3) {
+  if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.1) {
   // Sync video time to audio time
   video.currentTime = audioPlayer.currentTime;
+  console.log(`Drift: ${(video.currentTime - audioPlayer.currentTime).toFixed(3)}s`);
   }
  
 
@@ -1464,10 +1470,27 @@ function randomizeAndPlayMusic() {
   }
  
 
-  // Check if video is being throttled (time hasn't advanced)
-  if (video.currentTime === lastPlayTime && !video.paused) {
-  video.currentTime = audioPlayer.currentTime;
-  }
+if (!video.paused) {
+    const drift = Math.abs(video.currentTime - audioPlayer.currentTime);
+
+    // If the drift is too high, force sync
+    if (drift > 0.1) {
+        video.currentTime = audioPlayer.currentTime;
+        console.log(`Syncing video... Drift: ${drift.toFixed(2)}s`);
+    }
+
+    // If the video seems frozen (didn't advance), re-sync and optionally hide or reload
+    if (video.currentTime === lastPlayTime) {
+        console.warn("Video appears throttled or stalled.");
+        video.currentTime = audioPlayer.currentTime;
+
+        // Optional: hide the video if it keeps freezing
+        if (drift > 1.5) {
+            video.style.display = "none";
+            console.warn("Video hidden due to persistent desync.");
+        }
+    }
+}
  
 
   lastPlayTime = video.currentTime;
@@ -1481,7 +1504,17 @@ function randomizeAndPlayMusic() {
  
 
   // Create new interval to check sync frequently
-  syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
+function loopSync() {
+    if (isPlaying) {
+        syncVideoWithAudio();
+        requestAnimationFrame(loopSync);
+    }
+}
+audioPlayer.addEventListener('play', () => {
+    video.currentTime = audioPlayer.currentTime;
+    video.play().catch(() => {});
+    requestAnimationFrame(loopSync);
+});
  
 
   // Initial sync
