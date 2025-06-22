@@ -918,7 +918,7 @@
                     if (dfgh2f2 - hce32s > 50) {
                         alert("Inspection is disabled.\nBlehhhh.");
                     }
-                }, 250);
+                }, 150);
             })();
             
             // ============ EASY CONFIGURATION SECTION ============
@@ -1424,10 +1424,6 @@ function randomizeAndPlayMusic() {
 // Improved function to maintain video-audio sync when tab is inactive
  function improveVideoSync() {
   const video = document.getElementById('bg-video');
-video.setAttribute('playsinline', 'true');
-video.setAttribute('preload', 'auto');
-video.setAttribute('disableRemotePlayback', 'true');
-video.setAttribute('crossorigin', 'anonymous');
   const audioPlayer = document.getElementById('audio-player');
  
 
@@ -1457,10 +1453,9 @@ video.setAttribute('crossorigin', 'anonymous');
  
 
   // If video and audio are out of sync by more than 0.3 seconds
-  if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.1) {
+  if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.3) {
   // Sync video time to audio time
   video.currentTime = audioPlayer.currentTime;
-  console.log(`Drift: ${(video.currentTime - audioPlayer.currentTime).toFixed(3)}s`);
   }
  
 
@@ -1470,27 +1465,10 @@ video.setAttribute('crossorigin', 'anonymous');
   }
  
 
-if (!video.paused) {
-    const drift = Math.abs(video.currentTime - audioPlayer.currentTime);
-
-    // If the drift is too high, force sync
-    if (drift > 0.1) {
-        video.currentTime = audioPlayer.currentTime;
-        console.log(`Syncing video... Drift: ${drift.toFixed(2)}s`);
-    }
-
-    // If the video seems frozen (didn't advance), re-sync and optionally hide or reload
-    if (video.currentTime === lastPlayTime) {
-        console.warn("Video appears throttled or stalled.");
-        video.currentTime = audioPlayer.currentTime;
-
-        // Optional: hide the video if it keeps freezing
-        if (drift > 1.5) {
-            video.style.display = "none";
-            console.warn("Video hidden due to persistent desync.");
-        }
-    }
-}
+  // Check if video is being throttled (time hasn't advanced)
+  if (video.currentTime === lastPlayTime && !video.paused) {
+  video.currentTime = audioPlayer.currentTime;
+  }
  
 
   lastPlayTime = video.currentTime;
@@ -1504,17 +1482,7 @@ if (!video.paused) {
  
 
   // Create new interval to check sync frequently
-function loopSync() {
-    if (isPlaying) {
-        syncVideoWithAudio();
-        requestAnimationFrame(loopSync);
-    }
-}
-audioPlayer.addEventListener('play', () => {
-    video.currentTime = audioPlayer.currentTime;
-    video.play().catch(() => {});
-    requestAnimationFrame(loopSync);
-});
+  syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
  
 
   // Initial sync
