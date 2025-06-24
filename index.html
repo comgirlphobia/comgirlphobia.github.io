@@ -1443,7 +1443,7 @@ function randomizeAndPlayMusic() {
 
 // Improve video syncing
 // Improved function to maintain video-audio sync when tab is inactive
-  function improveVideoSync() {
+ function improveVideoSync() {
   const video = document.getElementById('bg-video');
   const audioPlayer = document.getElementById('audio-player');
  
@@ -1496,29 +1496,23 @@ function randomizeAndPlayMusic() {
   };
  
 
- 
-
-  // Event listener to ensure the video always starts at the audio's current time
+  // Start sync checking when audio plays
   audioPlayer.addEventListener('play', () => {
-  // Ensure video is displayed
-  video.style.display = "";
- 
-
   // Clear any existing interval
   if (syncCheckInterval) clearInterval(syncCheckInterval);
  
 
   // Create new interval to check sync frequently
-  syncCheckInterval = setInterval(syncVideoWithAudio, 150); // Increase frequency to 150ms
+  syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
  
 
-  // Start syncing and play video
+  // Initial sync
   video.currentTime = audioPlayer.currentTime;
   video.play().catch(() => {});
   });
  
 
-  // Also sync when seeking
+  // Update sync when seeking
   audioPlayer.addEventListener('seeked', () => {
   video.currentTime = audioPlayer.currentTime;
   });
@@ -1537,7 +1531,7 @@ function randomizeAndPlayMusic() {
   if (syncCheckInterval) clearInterval(syncCheckInterval);
   video.pause();
   });
-  }
+ }
  
             // Click Sound Setup
             let soundEnabled = CLICK_SOUND_CONFIG.enabled;
