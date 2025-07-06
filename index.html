@@ -1001,6 +1001,7 @@ body {
     z-index: 4;
 }
 
+/* Ensure the buttons themselves use flexbox centering */
 .about-media-btn,
 .about-media-btn-watch {
     display: flex;
@@ -1020,7 +1021,13 @@ body {
         filter 0.20s,
         transform 0.18s;
     position: relative;
+    text-decoration: none;
+    
+    /* Perfect centering */
+    text-align: center;
+    line-height: 1;
 }
+
 
 .about-media-btn {
     align-self: flex-end;
@@ -1039,12 +1046,14 @@ body {
     transform: scale(1.12);
 }
 
+/* Center the icons within the download and watch buttons - FIX */
 .about-media-btn img,
 .about-media-btn-watch img {
     width: 1.1em;
     height: 1.1em;
-    margin-right: 0.3em;
+    margin: 0; /* Remove any default margins */
     pointer-events: none;
+    display: block; /* Ensure proper centering */
 }
 
 .about-artists-grid {
