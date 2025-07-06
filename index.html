@@ -819,6 +819,88 @@
                 video::-internal-media-controls-pip-button {
                     display: none !important;
                 }
+
+/* Logo throb and particle effects */
+.site-title-img {
+    transition: transform 0.1s ease-out;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+}
+
+.site-title-img.throb {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.6));
+}
+
+/* Particle container */
+.logo-particles {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Individual particles */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particle-float 3s ease-out infinite;
+}
+
+@keyframes particle-float {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translate(var(--random-x, 0), var(--random-y, 0)) scale(1.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--random-x, 0), var(--random-y, 0)) scale(0.5);
+    }
+}
+
+/* Glow ring effect */
+.logo-glow-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.logo-glow-ring.active {
+    opacity: 1;
+    animation: glow-pulse 0.6s ease-out;
+}
+
+@keyframes glow-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0;
+    }
+}
+
+/* Make header container relative for positioning */
+.header {
+    position: relative;
+}
 /* Navigation Bar Styles */
 .navbar {
     position: fixed;
@@ -1730,6 +1812,32 @@ const VOLUME_SLIDER_CONFIG = {
                     }
                 ],
             };
+// Logo Effects Configuration
+const LOGO_EFFECTS_CONFIG = {
+    throb: {
+        enabled: true,
+        intensity: 0.15, // How much the logo scales (0.1 = 10% bigger)
+        sensitivity: 0.3, // How sensitive to beat detection (0.1 = very sensitive, 1.0 = less sensitive)
+        minInterval: 100, // Minimum time between throbs (ms)
+        glowColor: "rgba(255, 255, 255, 0.6)", // Glow color when throbbing
+        baseGlow: "rgba(255, 255, 255, 0.3)" // Base glow color
+    },
+    particles: {
+        enabled: true,
+        count: 8, // Number of particles per burst
+        colors: ["#ffffff", "#ff69b4", "#00ffff", "#ffff00"], // Particle colors
+        size: {min: 2, max: 6}, // Particle size range
+        speed: {min: 50, max: 150}, // Particle travel distance
+        lifetime: 3000, // How long particles live (ms)
+        burstInterval: 200 // Minimum time between particle bursts (ms)
+    },
+    glowRing: {
+        enabled: true,
+        color: "rgba(255, 255, 255, 0.4)",
+        size: 200, // Ring size in pixels
+        duration: 600 // Ring animation duration (ms)
+    }
+};
     // Custom Font Configuration
 const FONT_CONFIG = {
     // Main site fonts
@@ -2303,6 +2411,212 @@ function renderFavoriteArtists() {
     });
 }
 
+// Logo Effects System
+let logoEffectsActive = false;
+let lastThrobTime = 0;
+let lastParticleBurst = 0;
+let audioContext = null;
+let analyser = null;
+let dataArray = null;
+let logoElement = null;
+let particleContainer = null;
+let glowRing = null;
+
+// Initialize logo effects
+function initializeLogoEffects() {
+    logoElement = document.querySelector('.site-title-img') || document.getElementById('site-title');
+    if (!logoElement) return;
+
+    // Create particle container
+    if (LOGO_EFFECTS_CONFIG.particles.enabled) {
+        const header = document.querySelector('.header');
+        particleContainer = document.createElement('div');
+        particleContainer.className = 'logo-particles';
+        header.appendChild(particleContainer);
+    }
+
+    // Create glow ring
+    if (LOGO_EFFECTS_CONFIG.glowRing.enabled) {
+        const header = document.querySelector('.header');
+        glowRing = document.createElement('div');
+        glowRing.className = 'logo-glow-ring';
+        glowRing.style.width = LOGO_EFFECTS_CONFIG.glowRing.size + 'px';
+        glowRing.style.height = LOGO_EFFECTS_CONFIG.glowRing.size + 'px';
+        glowRing.style.borderColor = LOGO_EFFECTS_CONFIG.glowRing.color;
+        header.appendChild(glowRing);
+    }
+
+    // Set up audio analysis
+    setupAudioAnalysis();
+}
+
+// Setup audio analysis for beat detection
+function setupAudioAnalysis() {
+    const audioPlayer = document.getElementById('audio-player');
+    if (!audioPlayer) return;
+
+    // Create audio context when user interacts (required by browsers)
+    const createAudioContext = () => {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audioPlayer);
+            
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            
+            // Start the animation loop
+            startLogoEffects();
+        }
+    };
+
+    // Create context on first play
+    audioPlayer.addEventListener('play', createAudioContext);
+    
+    // Also create on user click (backup)
+    document.addEventListener('click', createAudioContext, { once: true });
+}
+
+// Start logo effects animation loop
+function startLogoEffects() {
+    if (logoEffectsActive) return;
+    logoEffectsActive = true;
+    
+    const animate = () => {
+        if (!logoEffectsActive) return;
+        
+        // Only analyze if music is playing
+        if (isPlaying && analyser && dataArray) {
+            analyser.getByteFrequencyData(dataArray);
+            
+            // Calculate bass energy (lower frequencies)
+            const bassStart = 0;
+            const bassEnd = Math.floor(dataArray.length * 0.1); // First 10% of frequencies
+            let bassEnergy = 0;
+            
+            for (let i = bassStart; i < bassEnd; i++) {
+                bassEnergy += dataArray[i];
+            }
+            
+            bassEnergy = bassEnergy / (bassEnd - bassStart);
+            
+            // Detect beat based on bass energy
+            const beatThreshold = 128 * LOGO_EFFECTS_CONFIG.throb.sensitivity;
+            const now = Date.now();
+            
+            if (bassEnergy > beatThreshold && now - lastThrobTime > LOGO_EFFECTS_CONFIG.throb.minInterval) {
+                triggerLogoThrob();
+                lastThrobTime = now;
+                
+                // Trigger particle burst
+                if (LOGO_EFFECTS_CONFIG.particles.enabled && now - lastParticleBurst > LOGO_EFFECTS_CONFIG.particles.burstInterval) {
+                    triggerParticleBurst();
+                    lastParticleBurst = now;
+                }
+                
+                // Trigger glow ring
+                if (LOGO_EFFECTS_CONFIG.glowRing.enabled && glowRing) {
+                    triggerGlowRing();
+                }
+            }
+        }
+        
+        requestAnimationFrame(animate);
+    };
+    
+    animate();
+}
+
+// Trigger logo throb effect
+function triggerLogoThrob() {
+    if (!logoElement || !LOGO_EFFECTS_CONFIG.throb.enabled) return;
+    
+    // Add throb class
+    logoElement.classList.add('throb');
+    
+    // Remove throb class after animation
+    setTimeout(() => {
+        logoElement.classList.remove('throb');
+    }, 150);
+}
+
+// Trigger particle burst
+function triggerParticleBurst() {
+    if (!particleContainer || !LOGO_EFFECTS_CONFIG.particles.enabled) return;
+    
+    const config = LOGO_EFFECTS_CONFIG.particles;
+    
+    for (let i = 0; i < config.count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random color
+        const color = config.colors[Math.floor(Math.random() * config.colors.length)];
+        particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+        
+        // Random size
+        const size = Math.random() * (config.size.max - config.size.min) + config.size.min;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        // Random direction
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * (config.speed.max - config.speed.min) + config.speed.min;
+        const randomX = Math.cos(angle) * distance;
+        const randomY = Math.sin(angle) * distance;
+        
+        particle.style.setProperty('--random-x', randomX + 'px');
+        particle.style.setProperty('--random-y', randomY + 'px');
+        
+        // Set animation duration
+        particle.style.animationDuration = (config.lifetime / 1000) + 's';
+        
+        particleContainer.appendChild(particle);
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, config.lifetime);
+    }
+}
+
+// Trigger glow ring effect
+function triggerGlowRing() {
+    if (!glowRing) return;
+    
+    glowRing.classList.add('active');
+    
+    setTimeout(() => {
+        glowRing.classList.remove('active');
+    }, LOGO_EFFECTS_CONFIG.glowRing.duration);
+}
+
+// Stop logo effects
+function stopLogoEffects() {
+    logoEffectsActive = false;
+    
+    // Clean up particles
+    if (particleContainer) {
+        particleContainer.innerHTML = '';
+    }
+    
+    // Remove throb class
+    if (logoElement) {
+        logoElement.classList.remove('throb');
+    }
+    
+    // Remove glow ring active class
+    if (glowRing) {
+        glowRing.classList.remove('active');
+    }
+}
+
 // Improve video syncing
 // Improved function to maintain video-audio sync when tab is inactive
  function improveVideoSync() {
@@ -2645,25 +2959,35 @@ function applyVolumeSliderStyles() {
                 volumePercent.textContent = Math.round(volume) + '%';
             }
     
-            function playAudio() {
-                const video = document.getElementById('bg-video');
-                if (MUSIC_TRACKS[currentTrack].file) {
-                    audioPlayer.play().catch(e => console.log('Playback failed:', e));
-                    // Sync video playback with audio
-                    if (video.src) {
-                        video.play().catch(e => console.log('Video play failed:', e));
-                    }
-                }
-            }
+function playAudio() {
+    const video = document.getElementById('bg-video');
+    if (MUSIC_TRACKS[currentTrack].file) {
+        audioPlayer.play().catch(e => console.log('Playback failed:', e));
+        
+        // Start logo effects when music starts
+        if (!logoEffectsActive) {
+            startLogoEffects();
+        }
+        
+        // Sync video playback with audio
+        if (video.src) {
+            video.play().catch(e => console.log('Video play failed:', e));
+        }
+    }
+}
     
-            function pauseAudio() {
-                const video = document.getElementById('bg-video');
-                audioPlayer.pause();
-                // Sync video pause with audio
-                if (video.src) {
-                    video.pause();
-                }
-            }
+function pauseAudio() {
+    const video = document.getElementById('bg-video');
+    audioPlayer.pause();
+    
+    // Stop logo effects when music pauses
+    stopLogoEffects();
+    
+    // Sync video pause with audio
+    if (video.src) {
+        video.pause();
+    }
+}
     
             function updateVideoBackgroundForSong(songObj) {
                 const video = document.getElementById('bg-video');
@@ -3152,6 +3476,7 @@ function renderAssets() {
     importCustomFonts();
     setFavicon();
     setSiteTitleImage();
+    initializeLogoEffects();
     setSubtitleImages();
     setupCursorTrails();
     setCursor();
