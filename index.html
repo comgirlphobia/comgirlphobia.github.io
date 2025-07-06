@@ -89,16 +89,23 @@
                 }
         
         
-                /* Main Container */
-                .container {
-                    min-height: 100vh;
-                    padding: 2rem;
-                    padding-top: 1rem;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 1.5rem;
-                }
+             /* To this: */
+#home-page {
+    min-height: calc(100vh - 80px);
+    padding: 2rem;
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Keep the blur-in animation but apply it to home page */
+#home-page.blur-in {
+    animation: blurIn 1.5s ease-out forwards;
+    filter: blur(10px);
+    opacity: 0;
+}
         
         
                 /* Header */
@@ -812,10 +819,617 @@
                 video::-internal-media-controls-pip-button {
                     display: none !important;
                 }
+/* Navigation Bar Styles */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(23, 23, 23, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    background: rgba(15, 15, 15, 0.98);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-link:hover {
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent);
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.75rem 1rem;
+        gap: 1rem;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Adjust body padding for fixed navbar */
+body {
+    padding-top: 80px;
+}
+
+/* Page Container */
+.page-container {
+    display: none;
+    min-height: calc(100vh - 80px);
+    padding: 2rem;
+}
+
+.page-container.active {
+    display: block;
+}
+
+/* Adjust existing container for home page */
+.container {
+    padding-top: 1rem;
+}
+.about-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.about-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1.3rem;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 16px #0008;
+}
+
+.about-media-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.2rem;
+    justify-content: flex-start;
+}
+
+.about-media-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.20);
+    width: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: 
+        box-shadow 0.28s cubic-bezier(0.65,0.05,0.36,1.15),
+        transform 0.2s cubic-bezier(0.18,0.68,0.37,1.45),
+        border-color 0.18s;
+}
+
+.about-media-card:hover {
+    box-shadow: 0 20px 50px #fff3, 0 2px 10px #0003;
+    border-color: var(--accent);
+    transform: translateY(-8px) scale(1.05);
+}
+
+.about-media-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+    transition: filter 0.18s, box-shadow 0.2s;
+}
+
+.about-media-card:hover .about-media-thumb {
+    filter: brightness(1.20) blur(0.5px);
+    box-shadow: 0 6px 24px #fff9;
+}
+
+.about-media-info {
+    padding: 1rem 1rem 0.7rem 1rem;
+    color: var(--text-dim);
+    flex-grow: 1;
+}
+
+.about-media-title {
+    color: var(--accent);
+    font-size: 1.13rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.about-media-desc {
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--text-dim);
+}
+
+.about-media-btn-group {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    top: 1rem;
+    right: 1rem;
+    z-index: 4;
+}
+
+.about-media-btn,
+.about-media-btn-watch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 36px;
+    padding: 0.42rem 0.8rem;
+    background: rgba(255,255,255,0.12);
+    cursor: pointer;
+    font-size: 1.12rem;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+    box-shadow: 0 2px 10px #0003;
+    transition: 
+        background 0.20s,
+        filter 0.20s,
+        transform 0.18s;
+    position: relative;
+}
+
+.about-media-btn {
+    align-self: flex-end;
+}
+.about-media-btn-watch {
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+.about-media-btn:hover,
+.about-media-btn-watch:hover {
+    background: var(--accent);
+    color: var(--primary-bg);
+    filter: brightness(1.45) drop-shadow(0 1px 8px #fff5);
+    transform: scale(1.12);
+}
+
+.about-media-btn img,
+.about-media-btn-watch img {
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.3em;
+    pointer-events: none;
+}
+
+.about-artists-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.1rem;
+}
+
+.artist-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 1.8rem 1.3rem 1rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 190px;
+    transition: 
+        box-shadow 0.22s cubic-bezier(0.32,0.61,0.46,1.15),
+        border-color 0.18s,
+        transform 0.18s;
+    position: relative;
+    text-align: center;
+}
+
+.artist-card:hover {
+    box-shadow: 0 16px 32px #fff4, 0 5px 15px #0004;
+    border-color: var(--accent);
+    transform: translateY(-7px) scale(1.045);
+}
+
+.artist-avatar {
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.1rem;
+    box-shadow: 0 2px 16px #fff7;
+}
+
+.artist-name {
+    color: var(--accent);
+    font-size: 1.09rem;
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+}
+
+.artist-genres {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+}
+
+.artist-link {
+    color: var(--accent);
+    background: rgba(255,255,255,0.10);
+    padding: 0.5rem 0.9rem;
+    border-radius: 18px;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.19s, color 0.19s, transform 0.19s;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+.artist-link:hover {
+    background: var(--accent);
+    color: var(--primary-bg);
+    transform: scale(1.07);
+}
+
+@media (max-width: 900px) {
+    .about-media-grid, .about-artists-grid { gap: 1.3rem; }
+    .about-media-card, .artist-card { width: 98vw; max-width: 300px;}
+}
+@media (max-width: 600px) {
+    .about-media-card, .artist-card { width: 100vw; max-width: 100%;}
+}
+/* Assets Page Styles */
+.assets-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.assets-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 3rem;
+    background: linear-gradient(45deg, var(--accent), #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 20px rgba(255,255,255,0.1);
+}
+
+.assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    justify-items: center;
+}
+
+.asset-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    max-width: 320px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.asset-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: left 0.5s ease;
+}
+
+.asset-card:hover::before {
+    left: 100%;
+}
+
+.asset-card:hover {
+    transform: translateY(-12px) scale(1.05);
+    border-color: var(--accent);
+    box-shadow: 0 25px 50px rgba(255, 255, 255, 0.15);
+}
+
+.asset-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.asset-card:hover .asset-image {
+    transform: scale(1.1);
+    border-color: var(--accent);
+    box-shadow: 0 8px 25px rgba(255,255,255,0.2);
+}
+
+.asset-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+.asset-download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--accent);
+    border-radius: 25px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: auto;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.asset-download-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: 0;
+}
+
+.asset-download-btn:hover::before {
+    transform: scaleX(1);
+}
+
+.asset-download-btn:hover {
+    color: var(--primary-bg);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+}
+
+.asset-download-btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+.asset-download-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.asset-download-btn:hover .asset-download-icon {
+    transform: scale(1.1);
+}
+
+.asset-download-text {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .assets-container {
+        padding: 1.5rem;
+    }
+    
+    .assets-heading {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .assets-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .asset-card {
+        max-width: 100%;
+        padding: 1.5rem;
+    }
+    
+    .asset-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .asset-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Custom font application for assets */
+.asset-title {
+    font-family: var(--asset-title-font, 'JetBrains Mono', monospace);
+}
+
+.asset-download-text {
+    font-family: var(--asset-download-font, 'JetBrains Mono', monospace);
+}
             </style>
 </head>
 
 <body>
+<!-- Navigation Bar -->
+<nav class="navbar" id="navbar">
+    <ul class="nav-links">
+        <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+        <li><a href="#" class="nav-link" data-page="about">About</a></li>
+        <li><a href="#" class="nav-link" data-page="assets">Assets</a></li>
+    </ul>
+</nav>
+
+<!-- Page Containers -->
+<div class="page-container active" id="home-page">
+    <!-- Header -->
+    <div class="header">
+        <!-- Site title will be replaced with an image via JavaScript -->
+        <h1 id="site-title">Our Collective</h1>
+        <p>discord.gg/infected 4 esex ^_^</p>
+    </div>
+
+    <!-- Music Player -->
+    <div class="music-player">
+        <div class="player-header">
+            <div class="album-art">♪</div>
+            <div class="track-info">
+                <h3 id="track-title">Neon Dreams</h3>
+                <p id="track-artist">Synthwave Collective</p>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button class="control-btn" id="prev-btn">⏮</button>
+            <button class="control-btn play-btn" id="play-btn">▶</button>
+            <button class="control-btn" id="next-btn">⏭</button>
+        </div>
+        <div class="volume-control">
+            <div class="volume-icon">🔊</div>
+            <div class="volume-slider-container">
+                <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
+                <div class="volume-fill" id="volume-fill"></div>
+            </div>
+            <div class="volume-percent" id="volume-percent">50%</div>
+        </div>
+        <audio id="audio-player" preload="metadata"></audio>
+    </div>
+
+    <!-- Single Centered Profile -->
+    <div class="profile-card" id="profile-card-1">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration"></div>
+            <div class="profile-avatar" id="profile-1"></div>
+        </div>
+
+        <div class="profile-name-container" id="profile-1-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+
+        <p class="profile-role" id="profile-role">Frontend Developer</p>
+
+        <p class="profile-bio" id="profile-bio">Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.</p>
+
+        <div class="profile-links" id="profile-links">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="page-container" id="about-page">
+<!-- FAVORITE MOVIES -->
+<section class="about-section" id="favorite-movies-section">
+  <h2 class="about-heading">Favorite Movies</h2>
+  <div class="about-media-grid" id="favorite-movies-list">
+    <!-- Movie items will be added here by JS/config -->
+  </div>
+</section>
+
+<!-- FAVORITE SHOWS -->
+<section class="about-section" id="favorite-shows-section">
+  <h2 class="about-heading">Favorite Shows</h2>
+  <div class="about-media-grid" id="favorite-shows-list">
+    <!-- Show items will be added here by JS/config -->
+  </div>
+</section>
+
+<!-- FAVORITE MUSIC ARTISTS -->
+<section class="about-section" id="favorite-artists-section">
+  <h2 class="about-heading">Favorite Music Artists</h2>
+  <div class="about-artists-grid" id="favorite-artists-list">
+    <!-- Artist cards will be added here by JS/config -->
+  </div>
+</section>
+</div>
+
+<div class="page-container" id="assets-page">
+ <div class="assets-container">
+    <h1 class="assets-heading">My Assets</h1>
+    <div class="assets-grid" id="assets-grid">
+        <!-- Asset items will be added here by JS/config -->
+    </div>
+</div>
+</div>
     <div id="enter-overlay">
         <div id="enter-text">Click to Enter</div>
         <div id="enter-subtext">Turn on sound for best experience</div>
@@ -829,66 +1443,7 @@
     <!-- Custom Cursor -->
     <div class="cursor"></div>
 
-    <!-- Main Container -->
-    <div class="container blur-in">
-        <!-- Header -->
-        <div class="header">
-            <!-- Site title will be replaced with an image via JavaScript -->
-            <h1 id="site-title">Our Collective</h1>
-            <p>discord.gg/infected 4 esex ^_^</p>
-        </div>
-
-        <!-- Music Player -->
-        <div class="music-player">
-            <div class="player-header">
-                <div class="album-art">♪</div>
-                <div class="track-info">
-                    <h3 id="track-title">Neon Dreams</h3>
-                    <p id="track-artist">Synthwave Collective</p>
-                </div>
-            </div>
-            <div class="player-controls">
-                <button class="control-btn" id="prev-btn">⏮</button>
-                <button class="control-btn play-btn" id="play-btn">▶</button>
-                <button class="control-btn" id="next-btn">⏭</button>
-            </div>
-            <div class="volume-control">
-                <div class="volume-icon">🔊</div>
-                <div class="volume-slider-container">
-                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
-                    <div class="volume-fill" id="volume-fill"></div>
-                </div>
-                <div class="volume-percent" id="volume-percent">50%</div>
-            </div>
-            <audio id="audio-player" preload="metadata"></audio>
-        </div>
-
-        <!-- Sound control button -->
-        <button class="sound-control" id="sound-toggle">🔊</button>
-
-        <!-- Audio element for click sound -->
-        <audio id="click-sound" preload="auto"></audio>
-
-        <!-- Single Centered Profile -->
-        <div class="profile-card" id="profile-card-1">
-            <div class="profile-avatar-container">
-                <div class="avatar-decoration" id="avatar-decoration"></div>
-                <div class="profile-avatar" id="profile-1"></div>
-            </div>
-
-            <div class="profile-name-container" id="profile-1-name-container">
-                <!-- Background and name image will be inserted here by JavaScript -->
-            </div>
-
-            <p class="profile-role" id="profile-role">Frontend Developer</p>
-
-            <p class="profile-bio" id="profile-bio">Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.</p>
-
-            <div class="profile-links" id="profile-links">
-                <!-- Links will be inserted here by JavaScript -->
-            </div>
-        </div>
-
+   
         <script>
             // ============ Enforce Bullshit ============
             if (location.protocol === "http:") {
@@ -1247,8 +1802,144 @@ const FONT_CONFIG = {
                 }
             ];
     
+// --- CONFIGURATION ---
+
+// Download & Watch icon config (you control which images to use)
+const ABOUT_MEDIA_BTN_ICONS = {
+    download: {
+        url: 'https://files.catbox.moe/v4j3rg.png', // Your download icon URL
+        alt: 'Download',
+    },
+    watch: {
+        url: 'https://files.catbox.moe/p4twyg.png', // Your play/watch icon URL
+        alt: 'Watch',
+    }
+};
+
+// Favorite Movies
+const FAVORITE_MOVIES = [
+    {
+        title: "Blade Runner 2049",
+        thumb: "https://files.catbox.moe/9kqw6v.jpg",
+        desc: "A visually stunning neo-noir set in a cyberpunk future.",
+        downloadLink: "#",
+        watchLink: "#"
+    },
+    // Add more movie objects here...
+];
+
+// Favorite Shows
+const FAVORITE_SHOWS = [
+    {
+        title: "Mr. Robot",
+        thumb: "https://files.catbox.moe/p0p5y2.jpg",
+        desc: "A hacker drama about society and identity.",
+        downloadLink: "#",
+        watchLink: "#"
+    },
+    // Add more show objects here...
+];
+
+// Favorite Artists
+const FAVORITE_ARTISTS = [
+    {
+        name: "Porter Robinson",
+        avatar: "https://files.catbox.moe/7v5fdn.png",
+        genres: "Electronic, Synthpop",
+        link: "https://soundcloud.com/porter-robinson"
+    },
+    // Add more artist objects here...
+];
             // ============ END CONFIGURATION SECTION ============
     
+// Navigation Configuration
+const NAV_CONFIG = {
+    scrollThreshold: 50, // When to add scrolled class
+    activeClass: 'active'
+};
+
+// Assets Page Configuration
+const ASSETS_CONFIG = {
+    // Default download button styling
+    downloadButton: {
+        icon: "https://files.catbox.moe/v4j3rg.png", // Your download icon URL
+        text: "Download", // Button text
+        textFont: "'JetBrains Mono', monospace" // Font for button text
+    },
+    
+    // Title font
+    titleFont: "'JetBrains Mono', monospace",
+    
+    // Your assets array - add/edit these
+    assets: [
+        {
+            title: "Cyber Cursor Pack",
+            image: "https://files.catbox.moe/8re19m.gif",
+            downloadLink: "https://files.catbox.moe/download/cursor-pack.zip",
+            // Optional: override global settings per asset
+            customIcon: "", // Leave empty to use global icon
+            customText: "", // Leave empty to use global text
+            customFont: "" // Leave empty to use global font
+        },
+        {
+            title: "Neon UI Elements",
+            image: "https://files.catbox.moe/szphgw.png",
+            downloadLink: "https://files.catbox.moe/download/ui-elements.zip"
+        },
+        {
+            title: "Synthwave Backgrounds",
+            image: "https://files.catbox.moe/x7wmli.png",
+            downloadLink: "https://files.catbox.moe/download/backgrounds.zip"
+        },
+        {
+            title: "Custom Font Collection",
+            image: "https://files.catbox.moe/qx1o7n.png",
+            downloadLink: "https://files.catbox.moe/download/fonts.zip",
+            customText: "Get Fonts" // Custom button text for this asset
+        }
+        // Add more assets here...
+    ]
+};
+
+// Navigation functionality
+function setupNavigation() {
+    const navbar = document.getElementById('navbar');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page-container');
+    
+    // Handle navigation clicks
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const targetPage = link.getAttribute('data-page');
+            
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            
+            // Add active class to clicked link
+            link.classList.add('active');
+            
+            // Hide all pages
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show target page
+            const targetPageElement = document.getElementById(targetPage + '-page');
+            if (targetPageElement) {
+                targetPageElement.classList.add('active');
+            }
+        });
+    });
+    
+    // Handle navbar scroll effect
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > NAV_CONFIG.scrollThreshold) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
             // Set Profile Name Background
             function setProfileNameBackground() {
                 const profileNameContainer = document.getElementById('profile-1-name-container');
@@ -1443,7 +2134,7 @@ function setupEnterOverlay() {
             overlay.remove();
             
             // Remove blur from main content
-            document.querySelector('.container').classList.remove('blur-in');
+            document.querySelector('#home-page').classList.remove('blur-in');
         }, 1000);
     });
 }
@@ -1462,6 +2153,106 @@ function randomizeAndPlayMusic() {
     
     // Play the audio
     playAudio();
+}
+
+function renderFavoriteMovies() {
+    const container = document.getElementById('favorite-movies-list');
+    container.innerHTML = '';
+    FAVORITE_MOVIES.forEach((m, idx) => {
+        const card = document.createElement('div');
+        card.className = "about-media-card";
+
+        // Button group (top-right for download, top-left for watch)
+        const btnGroup = document.createElement('div');
+        btnGroup.className = "about-media-btn-group";
+
+        // DOWNLOAD button (top right)
+        const btnDownload = document.createElement('a');
+        btnDownload.className = 'about-media-btn';
+        btnDownload.href = m.downloadLink;
+        btnDownload.target = "_blank";
+        btnDownload.title = 'Download';
+        btnDownload.innerHTML = `<img src="${ABOUT_MEDIA_BTN_ICONS.download.url}" alt="${ABOUT_MEDIA_BTN_ICONS.download.alt}">`;
+        btnGroup.appendChild(btnDownload);
+
+        // WATCH button (top left)
+        const btnWatch = document.createElement('a');
+        btnWatch.className = 'about-media-btn-watch';
+        btnWatch.href = m.watchLink;
+        btnWatch.target = "_blank";
+        btnWatch.title = 'Watch';
+        btnWatch.innerHTML = `<img src="${ABOUT_MEDIA_BTN_ICONS.watch.url}" alt="${ABOUT_MEDIA_BTN_ICONS.watch.alt}">`;
+        btnGroup.appendChild(btnWatch);
+
+        card.appendChild(btnGroup);
+
+        card.innerHTML += `
+            <img class="about-media-thumb" src="${m.thumb}" alt="${m.title}">
+            <div class="about-media-info">
+                <div class="about-media-title">${m.title}</div>
+                <div class="about-media-desc">${m.desc}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderFavoriteShows() {
+    const container = document.getElementById('favorite-shows-list');
+    container.innerHTML = '';
+    FAVORITE_SHOWS.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = "about-media-card";
+
+        // Button group (top-right for download, top-left for watch)
+        const btnGroup = document.createElement('div');
+        btnGroup.className = "about-media-btn-group";
+
+        // DOWNLOAD button (top right)
+        const btnDownload = document.createElement('a');
+        btnDownload.className = 'about-media-btn';
+        btnDownload.href = s.downloadLink;
+        btnDownload.target = "_blank";
+        btnDownload.title = 'Download';
+        btnDownload.innerHTML = `<img src="${ABOUT_MEDIA_BTN_ICONS.download.url}" alt="${ABOUT_MEDIA_BTN_ICONS.download.alt}">`;
+        btnGroup.appendChild(btnDownload);
+
+        // WATCH button (top left)
+        const btnWatch = document.createElement('a');
+        btnWatch.className = 'about-media-btn-watch';
+        btnWatch.href = s.watchLink;
+        btnWatch.target = "_blank";
+        btnWatch.title = 'Watch';
+        btnWatch.innerHTML = `<img src="${ABOUT_MEDIA_BTN_ICONS.watch.url}" alt="${ABOUT_MEDIA_BTN_ICONS.watch.alt}">`;
+        btnGroup.appendChild(btnWatch);
+
+        card.appendChild(btnGroup);
+
+        card.innerHTML += `
+            <img class="about-media-thumb" src="${s.thumb}" alt="${s.title}">
+            <div class="about-media-info">
+                <div class="about-media-title">${s.title}</div>
+                <div class="about-media-desc">${s.desc}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderFavoriteArtists() {
+    const container = document.getElementById('favorite-artists-list');
+    container.innerHTML = '';
+    FAVORITE_ARTISTS.forEach((a, idx) => {
+        const card = document.createElement('div');
+        card.className = "artist-card";
+        card.innerHTML = `
+            <img class="artist-avatar" src="${a.avatar}" alt="${a.name}">
+            <div class="artist-name">${a.name}</div>
+            <div class="artist-genres">${a.genres}</div>
+            <a href="${a.link}" target="_blank" class="artist-link">Music</a>
+        `;
+        container.appendChild(card);
+    });
 }
 
 // Improve video syncing
@@ -2172,6 +2963,40 @@ function applyCustomFonts() {
                     }
                 }
             }
+
+function renderAssets() {
+    const container = document.getElementById('assets-grid');
+    if (!container) return;
+    
+    // Clear existing content
+    container.innerHTML = '';
+    
+    // Apply custom fonts to CSS variables
+    document.documentElement.style.setProperty('--asset-title-font', ASSETS_CONFIG.titleFont);
+    document.documentElement.style.setProperty('--asset-download-font', ASSETS_CONFIG.downloadButton.textFont);
+    
+    // Create asset cards
+    ASSETS_CONFIG.assets.forEach((asset, index) => {
+        const card = document.createElement('div');
+        card.className = 'asset-card';
+        
+        // Determine which icon, text, and font to use
+        const downloadIcon = asset.customIcon || ASSETS_CONFIG.downloadButton.icon;
+        const downloadText = asset.customText || ASSETS_CONFIG.downloadButton.text;
+        const downloadFont = asset.customFont || ASSETS_CONFIG.downloadButton.textFont;
+        
+        card.innerHTML = `
+            <img class="asset-image" src="${asset.image}" alt="${asset.title}" loading="lazy">
+            <h3 class="asset-title">${asset.title}</h3>
+            <a href="${asset.downloadLink}" class="asset-download-btn" target="_blank" rel="noopener noreferrer">
+                <img class="asset-download-icon" src="${downloadIcon}" alt="Download">
+                <span class="asset-download-text" style="font-family: ${downloadFont}">${downloadText}</span>
+            </a>
+        `;
+        
+        container.appendChild(card);
+    });
+}
     
             // Setup click ring animation
             function setupClickRing() {
@@ -2203,33 +3028,42 @@ function applyCustomFonts() {
     
             // Initialize everything
             window.addEventListener('DOMContentLoaded', () => {
-                loadCustomFonts();  // Load custom font files first
-                importCustomFonts(); // Keep your existing Google Fonts import if needed
-                applyCustomFonts();  // Apply the custom fonts to elements
-                setFavicon();
-                setSiteTitleImage();
-                setSubtitleImages(); 
-                setupCursorTrails();
-                setCursor();
-                setTrails();
-                applyVolumeSliderStyles();
-                setupCursorMovement();
-                setProfileNameBackground();
-                setProfileNameImage();
-                setProfileContent();
-                setProfileLinks();
-                updateTrackInfo();
-                updateVolumeDisplay();
-                setupMusicPlayer();
-                setupClickSound();
-                setupHoverSound();
-                setupPlayerGlow();
-                setupHoverEffects();
-                setupClickRing();
-                initializePaused();
-                setupEnterOverlay(); // New function for enter overlay
-                improveVideoSync(); // New function for better video sync
-                adjustSpacing();
+    loadCustomFonts();
+    importCustomFonts();
+    applyCustomFonts();
+    setFavicon();
+    setSiteTitleImage();
+    setSubtitleImages();
+    setupCursorTrails();
+    setCursor();
+    setTrails();
+    applyVolumeSliderStyles();
+    setupCursorMovement();
+    setProfileNameBackground();
+    setProfileNameImage();
+    setProfileContent();
+    setProfileLinks();
+    updateTrackInfo();
+    updateVolumeDisplay();
+    setupMusicPlayer();
+    setupClickSound();
+    setupHoverSound();
+    setupPlayerGlow();
+    setupHoverEffects();
+    setupClickRing();
+    initializePaused();
+    setupEnterOverlay();
+    improveVideoSync();
+    adjustSpacing();
+    setupNavigation();
+    
+    // Add this line here:
+    document.querySelector('#home-page').classList.add('blur-in');
+    
+    renderFavoriteMovies();
+    renderFavoriteShows();
+    renderFavoriteArtists();
+    renderAssets();
             });
         </script>
 </body>
