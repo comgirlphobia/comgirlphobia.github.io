@@ -2843,18 +2843,37 @@ function applyCustomFonts() {
     }
     
     if (FONT_CONFIG.aboutMediaTitles) {
+  // About page fonts
+ const card = document.querySelector('.profile-card');
+  if (card && FONT_CONFIG.profileRole) {
+  const profileRole = document.getElementById('profile-role');
+  if (profileRole) {
+  profileRole.style.fontFamily = FONT_CONFIG.profileRole.family + ', ' + FONT_CONFIG.profileRole.fallback;}
+        }
+
         const mediaTitles = document.querySelectorAll('.about-media-title');
-        mediaTitles.forEach(title => {
-            title.style.fontFamily = FONT_CONFIG.aboutMediaTitles.family + ', ' + FONT_CONFIG.aboutMediaTitles.fallback;
-        });
+            //card.style.fontFamily = FONT_CONFIG.profileRole.family + ', ' + FONT_CONFIG.profileRole.fallback;
+//profileRole.style.fontFamily ="test";
+       mediaTitles.forEach(title => {
+     title.style.fontFamily = FONT_CONFIG.aboutMediaTitles.family + ', ' + FONT_CONFIG.aboutMediaTitles.fallback;
+   });
     }
     
-    if (FONT_CONFIG.aboutMediaDesc) {
+    
+   if (FONT_CONFIG.aboutMediaDesc) {
+       const card = document.querySelector('.profile-card');
+  if (card && FONT_CONFIG.profileRole) {
+ var fontStyle = FONT_CONFIG.profileRole.family + ', ' + FONT_CONFIG.profileRole.fallback;
+ //profileLinks.style.fontFamily = 'CyberPunk, sans-serif';
+ //const link = document.createElement('link');
+ // const profileLinks = document.querySelectorAll('.profile-links');
         const mediaDescs = document.querySelectorAll('.about-media-desc');
-        mediaDescs.forEach(desc => {
-            desc.style.fontFamily = FONT_CONFIG.aboutMediaDesc.family + ', ' + FONT_CONFIG.aboutMediaDesc.fallback;
-        });
-    }
+ mediaDescs.forEach(desc => {
+           desc.style.fontFamily = FONT_CONFIG.aboutMediaDesc.family + ', ' + FONT_CONFIG.aboutMediaDesc.fallback;
+     //desc.style.fontFamily ="test";
+        
+   });
+  }
     
     if (FONT_CONFIG.aboutArtistNames) {
         const artistNames = document.querySelectorAll('.artist-name');
