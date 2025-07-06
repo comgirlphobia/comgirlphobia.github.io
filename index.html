@@ -411,6 +411,11 @@
                     border-color: var(--accent);
                     box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
                 }
+
+.music-player.scrolled {
+    top: 5rem; /* Moves it down when navbar is visible */
+    transition: top 0.3s ease;
+}
             /* Click to Enter Overlay */
             #enter-overlay {
                 position: fixed;
@@ -1921,14 +1926,17 @@ function setupNavigation() {
         });
     });
     
-    // Handle navbar scroll effect
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > NAV_CONFIG.scrollThreshold) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+// Handle navbar scroll effect
+window.addEventListener('scroll', () => {
+    const musicPlayer = document.querySelector('.music-player');
+    if (window.scrollY > NAV_CONFIG.scrollThreshold) {
+        navbar.classList.add('scrolled');
+        if (musicPlayer) musicPlayer.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+        if (musicPlayer) musicPlayer.classList.remove('scrolled');
+    }
+});
 }
             // Set Profile Name Background
             function setProfileNameBackground() {
