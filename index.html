@@ -1815,7 +1815,7 @@ const LOGO_EFFECTS_CONFIG = {
     throb: {
         enabled: true,
         intensity: 0.08, // Reduced since it will throb more frequently
-        sensitivity: 0.15, // Much more sensitive
+        sensitivity: 0.9, // Much more sensitive
         minInterval: 50, // Much faster response
         adaptiveThreshold: false, // Disable adaptive for more consistent throbbing
         smoothing: 0.7, // Smoothing factor for audio analysis
@@ -1825,7 +1825,7 @@ const LOGO_EFFECTS_CONFIG = {
         baseGlow: "rgba(255, 255, 255, 0.3)"
     },
     particles: {
-        enabled: true,
+        enabled: false,
         count: 3, // Reduced since particles will trigger more often
         colors: ["#ffffff", "#ff69b4", "#00ffff", "#ffff00"],
         size: {min: 2, max: 5},
@@ -1834,7 +1834,7 @@ const LOGO_EFFECTS_CONFIG = {
         burstInterval: 150 // More frequent bursts
     },
     glowRing: {
-        enabled: true,
+        enabled: false,
         color: "rgba(255, 255, 255, 0.3)",
         size: 180,
         duration: 300 // Shorter duration
