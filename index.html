@@ -1822,15 +1822,15 @@ const VOLUME_SLIDER_CONFIG = {
 const LOGO_EFFECTS_CONFIG = {
     throb: {
         enabled: true,
-        intensity: 0.15,
-        sensitivity: 0.4, // Increased for better beat detection
+        intensity: 0.20,
+        sensitivity: 0.7, // Increased for better beat detection
         minInterval: 300, // Increased to prevent spam
         adaptiveThreshold: true, // Enable adaptive beat detection
         glowColor: "rgba(255, 255, 255, 0.6)",
         baseGlow: "rgba(255, 255, 255, 0.3)"
     },
     particles: {
-        enabled: true,
+        enabled: false,
         count: 6, // Reduced for better performance
         colors: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
         size: {min: 3, max: 7},
