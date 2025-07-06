@@ -1814,13 +1814,13 @@ const VOLUME_SLIDER_CONFIG = {
 const LOGO_EFFECTS_CONFIG = {
     throb: {
         enabled: true,
-        intensity: 1, // Reduced since it will throb more frequently
+        intensity: 0.8, // Reduced since it will throb more frequently
         sensitivity: 0.5, // Much more sensitive
         minInterval: 50, // Much faster response
         adaptiveThreshold: false, // Disable adaptive for more consistent throbbing
         smoothing: 0.7, // Smoothing factor for audio analysis
         frequencyRange: 'full', // 'bass', 'mid', 'high', or 'full'
-        energyThreshold: 15, // Lower threshold for more sensitivity
+        energyThreshold: 17, // Lower threshold for more sensitivity
         glowColor: "rgba(255, 255, 255, 0.5)",
         baseGlow: "rgba(255, 255, 255, 0.3)"
     },
