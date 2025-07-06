@@ -959,7 +959,8 @@ body {
 .about-media-thumb {
     width: 100%;
     aspect-ratio: 16/9;
-    object-fit: cover;
+    object-fit: contain; /* Changed from 'cover' to 'contain' */
+    background-color: var(--card-bg); /* Adds background color for letterboxing */
     border-bottom: 1px solid var(--border);
     transition: filter 0.18s, box-shadow 0.2s;
 }
@@ -970,7 +971,7 @@ body {
 }
 
 .about-media-info {
-    padding: 1rem 1rem 0.7rem 1rem;
+    padding: 0.8rem 1rem 0.6rem 1rem; /* Reduced padding */
     color: var(--text-dim);
     flex-grow: 1;
 }
@@ -983,9 +984,14 @@ body {
 }
 
 .about-media-desc {
-    font-size: 1rem;
-    line-height: 1.3;
+    font-size: 0.85rem; /* Smaller font size */
+    line-height: 1.2; /* Tighter line spacing */
     color: var(--text-dim);
+    max-height: 3.6rem; /* Limits height to about 3 lines */
+    overflow: hidden; /* Hides overflow text */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limits to 3 lines */
+    -webkit-box-orient: vertical;
 }
 
 .about-media-btn-group {
@@ -1775,6 +1781,61 @@ const FONT_CONFIG = {
     volumeText: {
         family: "VolumeText",
         url: "/fonts/volumetext.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    }
+    // Navigation bar fonts
+    navLinks: {
+        family: "NavLinks",
+        url: "/fonts/navlinks.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    
+    // About page fonts
+    aboutHeadings: {
+        family: "AboutHeadings",
+        url: "/fonts/aboutheadings.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    aboutMediaTitles: {
+        family: "AboutMediaTitles",
+        url: "/fonts/aboutmediatitles.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    aboutMediaDesc: {
+        family: "AboutMediaDesc",
+        url: "/fonts/aboutmediadesc.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    aboutArtistNames: {
+        family: "AboutArtistNames",
+        url: "/fonts/aboutartistnames.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    aboutArtistGenres: {
+        family: "AboutArtistGenres",
+        url: "/fonts/aboutartistgenres.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    aboutArtistLinks: {
+        family: "AboutArtistLinks",
+        url: "/fonts/aboutartistlinks.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    
+    // Assets page fonts
+    assetsHeading: {
+        family: "AssetsHeading",
+        url: "/fonts/assetsheading.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    assetsTitles: {
+        family: "AssetsTitles",
+        url: "/fonts/assetstitles.woff2",
+        fallback: "'JetBrains Mono', monospace"
+    },
+    assetsButtons: {
+        family: "AssetsButtons",
+        url: "/fonts/assetsbuttons.woff2",
         fallback: "'JetBrains Mono', monospace"
     }
 };
@@ -2767,6 +2828,78 @@ function applyCustomFonts() {
         if (volumePercent) {
             volumePercent.style.fontFamily = FONT_CONFIG.volumeText.family + ', ' + FONT_CONFIG.volumeText.fallback;
         }
+    }
+    // Navigation bar fonts
+    if (FONT_CONFIG.navLinks) {
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.style.fontFamily = FONT_CONFIG.navLinks.family + ', ' + FONT_CONFIG.navLinks.fallback;
+        });
+    }
+    
+    // About page fonts
+    if (FONT_CONFIG.aboutHeadings) {
+        const aboutHeadings = document.querySelectorAll('.about-heading');
+        aboutHeadings.forEach(heading => {
+            heading.style.fontFamily = FONT_CONFIG.aboutHeadings.family + ', ' + FONT_CONFIG.aboutHeadings.fallback;
+        });
+    }
+    
+    if (FONT_CONFIG.aboutMediaTitles) {
+        const mediaTitles = document.querySelectorAll('.about-media-title');
+        mediaTitles.forEach(title => {
+            title.style.fontFamily = FONT_CONFIG.aboutMediaTitles.family + ', ' + FONT_CONFIG.aboutMediaTitles.fallback;
+        });
+    }
+    
+    if (FONT_CONFIG.aboutMediaDesc) {
+        const mediaDescs = document.querySelectorAll('.about-media-desc');
+        mediaDescs.forEach(desc => {
+            desc.style.fontFamily = FONT_CONFIG.aboutMediaDesc.family + ', ' + FONT_CONFIG.aboutMediaDesc.fallback;
+        });
+    }
+    
+    if (FONT_CONFIG.aboutArtistNames) {
+        const artistNames = document.querySelectorAll('.artist-name');
+        artistNames.forEach(name => {
+            name.style.fontFamily = FONT_CONFIG.aboutArtistNames.family + ', ' + FONT_CONFIG.aboutArtistNames.fallback;
+        });
+    }
+    
+    if (FONT_CONFIG.aboutArtistGenres) {
+        const artistGenres = document.querySelectorAll('.artist-genres');
+        artistGenres.forEach(genre => {
+            genre.style.fontFamily = FONT_CONFIG.aboutArtistGenres.family + ', ' + FONT_CONFIG.aboutArtistGenres.fallback;
+        });
+    }
+    
+    if (FONT_CONFIG.aboutArtistLinks) {
+        const artistLinks = document.querySelectorAll('.artist-link');
+        artistLinks.forEach(link => {
+            link.style.fontFamily = FONT_CONFIG.aboutArtistLinks.family + ', ' + FONT_CONFIG.aboutArtistLinks.fallback;
+        });
+    }
+    
+    // Assets page fonts
+    if (FONT_CONFIG.assetsHeading) {
+        const assetsHeading = document.querySelector('.assets-heading');
+        if (assetsHeading) {
+            assetsHeading.style.fontFamily = FONT_CONFIG.assetsHeading.family + ', ' + FONT_CONFIG.assetsHeading.fallback;
+        }
+    }
+    
+    if (FONT_CONFIG.assetsTitles) {
+        const assetTitles = document.querySelectorAll('.asset-title');
+        assetTitles.forEach(title => {
+            title.style.fontFamily = FONT_CONFIG.assetsTitles.family + ', ' + FONT_CONFIG.assetsTitles.fallback;
+        });
+    }
+    
+    if (FONT_CONFIG.assetsButtons) {
+        const assetButtons = document.querySelectorAll('.asset-download-text');
+        assetButtons.forEach(button => {
+            button.style.fontFamily = FONT_CONFIG.assetsButtons.family + ', ' + FONT_CONFIG.assetsButtons.fallback;
+        });
     }
 }
     
