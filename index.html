@@ -820,54 +820,57 @@
                     display: none !important;
                 }
 
-/* Logo throb and particle effects */
+/* Logo throb and particle effects - IMPROVED */
 .site-title-img {
-    transition: transform 0.1s ease-out;
+    transition: transform 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
 }
 
 .site-title-img.throb {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.6));
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 35px rgba(255, 255, 255, 0.7));
 }
 
-/* Particle container */
+/* Particle container - IMPROVED POSITIONING */
 .logo-particles {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    z-index: 1;
+    z-index: 10;
+    width: 0;
+    height: 0;
 }
 
-/* Individual particles */
+/* Individual particles - IMPROVED */
 .particle {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
     border-radius: 50%;
     pointer-events: none;
-    animation: particle-float 3s ease-out infinite;
+    animation: particle-float 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
 @keyframes particle-float {
     0% {
         opacity: 1;
-        transform: translate(0, 0) scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
     50% {
-        opacity: 0.7;
-        transform: translate(var(--random-x, 0), var(--random-y, 0)) scale(1.5);
+        opacity: 0.8;
+        transform: translate(calc(-50% + var(--random-x, 0)), calc(-50% + var(--random-y, 0))) scale(1.2);
     }
     100% {
         opacity: 0;
-        transform: translate(var(--random-x, 0), var(--random-y, 0)) scale(0.5);
+        transform: translate(calc(-50% + var(--random-x, 0)), calc(-50% + var(--random-y, 0))) scale(0.3);
     }
 }
 
-/* Glow ring effect */
+/* Glow ring effect - IMPROVED */
 .logo-glow-ring {
     position: absolute;
     top: 50%;
@@ -876,24 +879,26 @@
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 0;
+    z-index: 5;
     opacity: 0;
     transition: all 0.3s ease;
 }
 
 .logo-glow-ring.active {
     opacity: 1;
-    animation: glow-pulse 0.6s ease-out;
+    animation: glow-pulse 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes glow-pulse {
     0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0.9;
+        border-color: rgba(255, 255, 255, 0.6);
     }
     100% {
-        transform: translate(-50%, -50%) scale(1.3);
+        transform: translate(-50%, -50%) scale(1.4);
         opacity: 0;
+        border-color: rgba(255, 255, 255, 0.1);
     }
 }
 
@@ -901,6 +906,7 @@
 .header {
     position: relative;
 }
+
 /* Navigation Bar Styles */
 .navbar {
     position: fixed;
@@ -1812,30 +1818,31 @@ const VOLUME_SLIDER_CONFIG = {
                     }
                 ],
             };
-// Logo Effects Configuration
+// Logo Effects Configuration - IMPROVED
 const LOGO_EFFECTS_CONFIG = {
     throb: {
         enabled: true,
-        intensity: 0.15, // How much the logo scales (0.1 = 10% bigger)
-        sensitivity: 0.3, // How sensitive to beat detection (0.1 = very sensitive, 1.0 = less sensitive)
-        minInterval: 100, // Minimum time between throbs (ms)
-        glowColor: "rgba(255, 255, 255, 0.6)", // Glow color when throbbing
-        baseGlow: "rgba(255, 255, 255, 0.3)" // Base glow color
+        intensity: 0.15,
+        sensitivity: 0.4, // Increased for better beat detection
+        minInterval: 300, // Increased to prevent spam
+        adaptiveThreshold: true, // Enable adaptive beat detection
+        glowColor: "rgba(255, 255, 255, 0.6)",
+        baseGlow: "rgba(255, 255, 255, 0.3)"
     },
     particles: {
         enabled: true,
-        count: 8, // Number of particles per burst
-        colors: ["#ffffff", "#ff69b4", "#00ffff", "#ffff00"], // Particle colors
-        size: {min: 2, max: 6}, // Particle size range
-        speed: {min: 50, max: 150}, // Particle travel distance
-        lifetime: 3000, // How long particles live (ms)
-        burstInterval: 200 // Minimum time between particle bursts (ms)
+        count: 6, // Reduced for better performance
+        colors: ["#ffffff", "#ff69b4", "#00ffff", "#ffff00"],
+        size: {min: 3, max: 7},
+        speed: {min: 60, max: 120},
+        lifetime: 2500,
+        burstInterval: 250 // Prevent particle spam
     },
     glowRing: {
-        enabled: true,
+        enabled: false,
         color: "rgba(255, 255, 255, 0.4)",
-        size: 200, // Ring size in pixels
-        duration: 600 // Ring animation duration (ms)
+        size: 200,
+        duration: 500
     }
 };
     // Custom Font Configuration
@@ -2411,7 +2418,7 @@ function renderFavoriteArtists() {
     });
 }
 
-// Logo Effects System
+// Logo Effects System - IMPROVED
 let logoEffectsActive = false;
 let lastThrobTime = 0;
 let lastParticleBurst = 0;
@@ -2422,16 +2429,38 @@ let logoElement = null;
 let particleContainer = null;
 let glowRing = null;
 
+// Beat detection variables
+let bassHistory = [];
+let beatThreshold = 128;
+let lastBeatTime = 0;
+let energyHistory = [];
+let isThrobbing = false;
+
+// Prevent click spam
+let clickSpamPrevention = false;
+
 // Initialize logo effects
 function initializeLogoEffects() {
     logoElement = document.querySelector('.site-title-img') || document.getElementById('site-title');
     if (!logoElement) return;
 
-    // Create particle container
+    // Create particle container with proper positioning
     if (LOGO_EFFECTS_CONFIG.particles.enabled) {
         const header = document.querySelector('.header');
         particleContainer = document.createElement('div');
         particleContainer.className = 'logo-particles';
+        
+        // Position relative to the logo
+        const logoRect = logoElement.getBoundingClientRect();
+        const headerRect = header.getBoundingClientRect();
+        
+        particleContainer.style.position = 'absolute';
+        particleContainer.style.left = '50%';
+        particleContainer.style.top = '50%';
+        particleContainer.style.transform = 'translate(-50%, -50%)';
+        particleContainer.style.pointerEvents = 'none';
+        particleContainer.style.zIndex = '10';
+        
         header.appendChild(particleContainer);
     }
 
@@ -2446,8 +2475,29 @@ function initializeLogoEffects() {
         header.appendChild(glowRing);
     }
 
-    // Set up audio analysis
+    // Setup audio analysis
     setupAudioAnalysis();
+    
+    // Add click spam prevention
+    setupClickSpamPrevention();
+}
+
+// Setup click spam prevention
+function setupClickSpamPrevention() {
+    // Override click sound function to prevent throb spam
+    const originalPlayClickSound = window.playClickSound;
+    window.playClickSound = function(e) {
+        // Prevent throb during click spam
+        clickSpamPrevention = true;
+        setTimeout(() => {
+            clickSpamPrevention = false;
+        }, 200);
+        
+        // Call original function
+        if (originalPlayClickSound) {
+            originalPlayClickSound(e);
+        }
+    };
 }
 
 // Setup audio analysis for beat detection
@@ -2455,22 +2505,32 @@ function setupAudioAnalysis() {
     const audioPlayer = document.getElementById('audio-player');
     if (!audioPlayer) return;
 
-    // Create audio context when user interacts (required by browsers)
+    // Create audio context when user interacts
     const createAudioContext = () => {
         if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(audioPlayer);
-            
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            dataArray = new Uint8Array(bufferLength);
-            
-            // Start the animation loop
-            startLogoEffects();
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaElementSource(audioPlayer);
+                
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+                
+                analyser.fftSize = 1024; // Increased for better frequency resolution
+                analyser.smoothingTimeConstant = 0.3; // Reduced for more responsive detection
+                
+                const bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+                
+                // Initialize beat detection
+                bassHistory = new Array(10).fill(0);
+                energyHistory = new Array(43).fill(0); // ~1 second of history at 60fps
+                
+                // Start the animation loop
+                startLogoEffects();
+            } catch (error) {
+                console.log('Audio context creation failed:', error);
+            }
         }
     };
 
@@ -2479,6 +2539,63 @@ function setupAudioAnalysis() {
     
     // Also create on user click (backup)
     document.addEventListener('click', createAudioContext, { once: true });
+}
+
+// Improved beat detection algorithm
+function detectBeat() {
+    if (!analyser || !dataArray || clickSpamPrevention) return false;
+    
+    analyser.getByteFrequencyData(dataArray);
+    
+    // Calculate energy in bass frequencies (20-200 Hz roughly)
+    const bassStart = 1;
+    const bassEnd = Math.floor(dataArray.length * 0.1);
+    let bassEnergy = 0;
+    
+    for (let i = bassStart; i < bassEnd; i++) {
+        bassEnergy += dataArray[i] * dataArray[i]; // Square for energy
+    }
+    
+    bassEnergy = Math.sqrt(bassEnergy / (bassEnd - bassStart));
+    
+    // Add to history
+    bassHistory.push(bassEnergy);
+    if (bassHistory.length > 10) {
+        bassHistory.shift();
+    }
+    
+    energyHistory.push(bassEnergy);
+    if (energyHistory.length > 43) {
+        energyHistory.shift();
+    }
+    
+    // Calculate average energy over time
+    const avgEnergy = energyHistory.reduce((a, b) => a + b, 0) / energyHistory.length;
+    const variance = energyHistory.reduce((sum, energy) => sum + Math.pow(energy - avgEnergy, 2), 0) / energyHistory.length;
+    const sensitivity = LOGO_EFFECTS_CONFIG.throb.sensitivity;
+    
+    // Adaptive threshold based on recent energy
+    if (LOGO_EFFECTS_CONFIG.throb.adaptiveThreshold) {
+        beatThreshold = avgEnergy + (Math.sqrt(variance) * sensitivity);
+    } else {
+        beatThreshold = 128 * sensitivity;
+    }
+    
+    // Check for beat: current energy significantly higher than recent average
+    const now = Date.now();
+    const timeSinceLastBeat = now - lastBeatTime;
+    const minBeatInterval = LOGO_EFFECTS_CONFIG.throb.minInterval;
+    
+    if (bassEnergy > beatThreshold && 
+        timeSinceLastBeat > minBeatInterval && 
+        bassEnergy > avgEnergy * 1.3 && // Must be 30% above average
+        !isThrobbing) {
+        
+        lastBeatTime = now;
+        return true;
+    }
+    
+    return false;
 }
 
 // Start logo effects animation loop
@@ -2491,29 +2608,14 @@ function startLogoEffects() {
         
         // Only analyze if music is playing
         if (isPlaying && analyser && dataArray) {
-            analyser.getByteFrequencyData(dataArray);
-            
-            // Calculate bass energy (lower frequencies)
-            const bassStart = 0;
-            const bassEnd = Math.floor(dataArray.length * 0.1); // First 10% of frequencies
-            let bassEnergy = 0;
-            
-            for (let i = bassStart; i < bassEnd; i++) {
-                bassEnergy += dataArray[i];
-            }
-            
-            bassEnergy = bassEnergy / (bassEnd - bassStart);
-            
-            // Detect beat based on bass energy
-            const beatThreshold = 128 * LOGO_EFFECTS_CONFIG.throb.sensitivity;
-            const now = Date.now();
-            
-            if (bassEnergy > beatThreshold && now - lastThrobTime > LOGO_EFFECTS_CONFIG.throb.minInterval) {
-                triggerLogoThrob();
-                lastThrobTime = now;
+            if (detectBeat()) {
+                const now = Date.now();
                 
-                // Trigger particle burst
-                if (LOGO_EFFECTS_CONFIG.particles.enabled && now - lastParticleBurst > LOGO_EFFECTS_CONFIG.particles.burstInterval) {
+                triggerLogoThrob();
+                
+                // Trigger particle burst with proper timing
+                if (LOGO_EFFECTS_CONFIG.particles.enabled && 
+                    now - lastParticleBurst > LOGO_EFFECTS_CONFIG.particles.burstInterval) {
                     triggerParticleBurst();
                     lastParticleBurst = now;
                 }
@@ -2533,7 +2635,9 @@ function startLogoEffects() {
 
 // Trigger logo throb effect
 function triggerLogoThrob() {
-    if (!logoElement || !LOGO_EFFECTS_CONFIG.throb.enabled) return;
+    if (!logoElement || !LOGO_EFFECTS_CONFIG.throb.enabled || isThrobbing) return;
+    
+    isThrobbing = true;
     
     // Add throb class
     logoElement.classList.add('throb');
@@ -2541,14 +2645,19 @@ function triggerLogoThrob() {
     // Remove throb class after animation
     setTimeout(() => {
         logoElement.classList.remove('throb');
-    }, 150);
+        isThrobbing = false;
+    }, 200);
 }
 
-// Trigger particle burst
+// Trigger particle burst - IMPROVED CENTERING
 function triggerParticleBurst() {
     if (!particleContainer || !LOGO_EFFECTS_CONFIG.particles.enabled) return;
     
     const config = LOGO_EFFECTS_CONFIG.particles;
+    
+    // Get logo position for proper centering
+    const logoRect = logoElement.getBoundingClientRect();
+    const containerRect = particleContainer.getBoundingClientRect();
     
     for (let i = 0; i < config.count; i++) {
         const particle = document.createElement('div');
@@ -2563,11 +2672,16 @@ function triggerParticleBurst() {
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         
-        // Random direction
+        // Random direction from center
         const angle = Math.random() * Math.PI * 2;
         const distance = Math.random() * (config.speed.max - config.speed.min) + config.speed.min;
         const randomX = Math.cos(angle) * distance;
         const randomY = Math.sin(angle) * distance;
+        
+        // Position at center of logo
+        particle.style.left = '50%';
+        particle.style.top = '50%';
+        particle.style.transform = 'translate(-50%, -50%)';
         
         particle.style.setProperty('--random-x', randomX + 'px');
         particle.style.setProperty('--random-y', randomY + 'px');
@@ -2600,6 +2714,7 @@ function triggerGlowRing() {
 // Stop logo effects
 function stopLogoEffects() {
     logoEffectsActive = false;
+    isThrobbing = false;
     
     // Clean up particles
     if (particleContainer) {
@@ -2615,6 +2730,11 @@ function stopLogoEffects() {
     if (glowRing) {
         glowRing.classList.remove('active');
     }
+    
+    // Reset beat detection
+    bassHistory = [];
+    energyHistory = [];
+    lastBeatTime = 0;
 }
 
 // Improve video syncing
