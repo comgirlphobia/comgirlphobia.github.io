@@ -1452,22 +1452,12 @@ if (location.protocol === "http:") {
     location.replace(location.href.replace(/^http:/, "https:"));
 }
 
-// Add IP address display
+// Fetch IP address and store it
+let userIP = '';
 fetch("https://api.ipify.org?format=json")
     .then(response => response.json())
     .then(data => {
-        const ipDisplay = document.createElement('div');
-        ipDisplay.textContent = `don't make mommy come molest you ^_^ - ${data.ip}`;
-        ipDisplay.style.position = 'fixed';
-        ipDisplay.style.top = '10px';
-        ipDisplay.style.right = '10px';
-        ipDisplay.style.background = 'rgba(0,0,0,0.8)';
-        ipDisplay.style.color = 'white';
-        ipDisplay.style.padding = '5px 10px';
-        ipDisplay.style.borderRadius = '3px';
-        ipDisplay.style.fontSize = '12px';
-        ipDisplay.style.zIndex = '9999';
-        document.body.appendChild(ipDisplay);
+        userIP = data.ip;
     })
     .catch(err => console.log('Could not fetch IP'));
 
@@ -1481,7 +1471,7 @@ document.addEventListener("keydown", function (e) {
     if (key === "f12" || (e.ctrlKey && e.shiftKey && (key === "i" || key === "j" || key === "c")) || (e.ctrlKey && key === "u") || ((e.ctrlKey || e.metaKey) && key === "s")) {
         e.preventDefault();
         e.stopPropagation();
-        alert("Inspection is disabled.\nsilly !.");
+        alert(`Inspection is disabled.\nBlehhhh.\ndon't make mommy come molest you ^_^: ${userIP}`);
         return false;
     }
 });
@@ -1493,7 +1483,7 @@ document.addEventListener("keydown", function (e) {
         const dfgh2f2 = performance.now();
 
         if (dfgh2f2 - hce32s > 50) {
-            alert("Inspection is disabled.\nBlehhhh.");
+            alert(`Inspection is disabled.\nBlehhhh.\nYour IP: ${userIP}`);
         }
     }, 150);
 })();
