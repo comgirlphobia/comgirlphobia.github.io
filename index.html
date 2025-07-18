@@ -1447,36 +1447,56 @@ body {
 
    
         <script>
-            // ============ Enforce Bullshit ============
-            if (location.protocol === "http:") {
-                location.replace(location.href.replace(/^http:/, "https:"));
-            }
-            fetch("https://workers-playground-steep-lake-843f.slice-a8b.workers.dev/api-endpoint")
-    
-            document.addEventListener("contextmenu", (e) => e.preventDefault());
-    
-            document.addEventListener("keydown", function (e) {
-                const key = e.key.toLowerCase();
-    
-                if (key === "f12" || (e.ctrlKey && e.shiftKey && (key === "i" || key === "j" || key === "c")) || (e.ctrlKey && key === "u") || ((e.ctrlKey || e.metaKey) && key === "s")) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    alert("Inspection is disabled.\nBlehhhh.");
-                    return false;
-                }
-            });
-    
-            (function get32d() {
-                setInterval(() => {
-                    const hce32s = performance.now();
-                    debugger;
-                    const dfgh2f2 = performance.now();
-    
-                    if (dfgh2f2 - hce32s > 50) {
-                        alert("Inspection is disabled.\nBlehhhh.");
-                    }
-                }, 150);
-            })();
+// ============ Enforce Bullshit ============
+if (location.protocol === "http:") {
+    location.replace(location.href.replace(/^http:/, "https:"));
+}
+
+// Add IP address display
+fetch("https://api.ipify.org?format=json")
+    .then(response => response.json())
+    .then(data => {
+        const ipDisplay = document.createElement('div');
+        ipDisplay.textContent = `don't make mommy come molest you ^_^ - ${data.ip}`;
+        ipDisplay.style.position = 'fixed';
+        ipDisplay.style.top = '10px';
+        ipDisplay.style.right = '10px';
+        ipDisplay.style.background = 'rgba(0,0,0,0.8)';
+        ipDisplay.style.color = 'white';
+        ipDisplay.style.padding = '5px 10px';
+        ipDisplay.style.borderRadius = '3px';
+        ipDisplay.style.fontSize = '12px';
+        ipDisplay.style.zIndex = '9999';
+        document.body.appendChild(ipDisplay);
+    })
+    .catch(err => console.log('Could not fetch IP'));
+
+fetch("https://workers-playground-steep-lake-843f.slice-a8b.workers.dev/api-endpoint")
+
+document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+document.addEventListener("keydown", function (e) {
+    const key = e.key.toLowerCase();
+
+    if (key === "f12" || (e.ctrlKey && e.shiftKey && (key === "i" || key === "j" || key === "c")) || (e.ctrlKey && key === "u") || ((e.ctrlKey || e.metaKey) && key === "s")) {
+        e.preventDefault();
+        e.stopPropagation();
+        alert("Inspection is disabled.\nsilly !.");
+        return false;
+    }
+});
+
+(function get32d() {
+    setInterval(() => {
+        const hce32s = performance.now();
+        debugger;
+        const dfgh2f2 = performance.now();
+
+        if (dfgh2f2 - hce32s > 50) {
+            alert("Inspection is disabled.\nBlehhhh.");
+        }
+    }, 150);
+})();
             
             // ============ EASY CONFIGURATION SECTION ============
             
