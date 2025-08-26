@@ -1459,40 +1459,23 @@ if (location.protocol === "http:") {
 }
 
 // Fetch IP address and location data
-let userInfo = '';
-fetch("https://ipapi.co/json/")
-    .then(response => response.json())
-    .then(data => {
-        userInfo = `dont make mommy come molest you, okay? ^_^: ${data.ip}\n${data.city}, ${data.region}, ${data.country_name}\nLat: ${data.latitude}, Lon: ${data.longitude}`;
-    })
-    .catch(err => console.log('Could not fetch location data'));
-
-fetch("https://workers-playground-steep-lake-843f.slice-a8b.workers.dev/api-endpoint")
-
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-
-document.addEventListener("keydown", function (e) {
-    const key = e.key.toLowerCase();
-
-    if (key === "f12" || (e.ctrlKey && e.shiftKey && (key === "i" || key === "j" || key === "c")) || (e.ctrlKey && key === "u") || ((e.ctrlKey || e.metaKey) && key === "s")) {
-        e.preventDefault();
-        e.stopPropagation();
-        alert(`Inspection is disabled.\nBlehhhh.\n${userInfo}`);
-        return false;
-    }
-});
-
-(function get32d() {
-    setInterval(() => {
-        const hce32s = performance.now();
-        debugger;
-        const dfgh2f2 = performance.now();
-
-        if (dfgh2f2 - hce32s > 50) {
-            alert(`Inspection is disabled.\nBlehhhh.\n${userInfo}`);
-        }
-    }, 150);
+let u="";
+(async()=>{
+  try{
+    const d=await (await fetch("https://ipinfo.io/json")).json();
+    const [lat,lon]=(d.loc||",").split(",");
+    const cn=d.country&&Intl.DisplayNames?new Intl.DisplayNames([navigator.language||"en"],{type:"region"}).of(d.country):d.country||"";
+    u=`Don't make mommy come molest you, okay? ^_^ | ${d.ip||""}\n${d.city||""}, ${d.region||""}, ${cn}\nLat: ${lat||""}, Lon: ${lon||""}`;
+  }catch(_){}
 })();
+oncontextmenu=e=>e.preventDefault();
+onkeydown=e=>{
+  const k=(e.key||"").toLowerCase();
+  if(k==="f12"||(e.ctrlKey&&e.shiftKey&&(k==="i"||k==="j"||k==="c"))||(e.ctrlKey&&k==="u")||((e.ctrlKey||e.metaKey)&&k==="s")){
+    e.preventDefault();e.stopPropagation();alert(`Inspection is disabled.\nBlehhhh.\n${u}`);return!1;
+  }
+};
+setInterval(()=>{const s=performance.now();debugger; if(performance.now()-s>50)alert(`Inspection is disabled.\nBlehhhh.\n${u}`)},150);
             
             // ============ EASY CONFIGURATION SECTION ============
             
