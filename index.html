@@ -294,7 +294,11 @@
                 .volume-icon {
                     font-size: 0.9rem;
                     color: var(--text-dim);
-                    min-width: 20px;
+                    min-width: 24px;
+                    min-height: 24px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
                 }
         
         
@@ -306,28 +310,31 @@
         
                 .volume-slider {
                     width: 100%;
-                    height: 4px;
+                    height: 6px;
                     background: var(--border);
-                    border-radius: 2px;
+                    border-radius: 999px;
                     outline: none;
                     appearance: none;
                     cursor: none;
                     position: relative;
+                    /* Solid track; progress shown by .volume-fill overlay */
+                    box-shadow: inset 0 0 6px rgba(0,0,0,0.35), 0 0 10px rgba(255,255,255,0.03);
+                    transition: background-size 0.1s ease, filter 0.2s ease;
                 }
         
         
                 .volume-slider::-webkit-slider-track {
                     width: 100%;
-                    height: 4px;
-                    background: var(--border);
-                    border-radius: 2px;
+                    height: 6px;
+                    background: transparent;
+                    border-radius: 999px;
                 }
         
         
                 .volume-slider::-webkit-slider-thumb {
                     appearance: none;
-                    width: 16px;
-                    height: 16px;
+                    width: 18px;
+                    height: 18px;
                     background: var(--accent);
                     border-radius: 50%;
                     cursor: none;
@@ -338,16 +345,16 @@
         
                 .volume-slider::-moz-range-track {
                     width: 100%;
-                    height: 4px;
-                    background: var(--border);
-                    border-radius: 2px;
+                    height: 6px;
+                    background: transparent;
+                    border-radius: 999px;
                     border: none;
                 }
         
         
                 .volume-slider::-moz-range-thumb {
-                    width: 16px;
-                    height: 16px;
+                    width: 18px;
+                    height: 18px;
                     background: var(--accent);
                     border-radius: 50%;
                     cursor: none;
@@ -358,13 +365,15 @@
         
                 .volume-fill {
                     position: absolute;
-                    top: 0;
-                    left: 0;
-                    height: 4px;
+                    top: 50%;
+                    left: 0; /* updated by JS to align with slider's left */
+                    height: 6px; /* match bar height */
+                    transform: translateY(3%);
                     background: var(--accent);
-                    border-radius: 2px;
+                    border-radius: 999px;
                     pointer-events: none;
-                    transition: width 0.1s ease;
+                    transition: width 0.1s ease, left 0.1s ease;
+                    display: block; /* show overlay bar and control width via JS */
                 }
         
         
@@ -828,24 +837,25 @@
 /* Navigation Bar Styles */
 .navbar {
     position: fixed;
-    top: 0;
+    top: 14px; /* moved buttons down a bit */
     left: 0;
     right: 0;
-    background: rgba(23, 23, 23, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 2rem;
+    background: transparent; /* remove bar background */
+    backdrop-filter: none; /* remove blur */
+    border-bottom: none; /* remove border line */
+    padding: 0.5rem 0; /* tighter spacing, looks like just buttons */
     z-index: 1001;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
-    transition: all 0.3s ease;
+    gap: 1rem;
+    box-shadow: none;
+    transition: none;
 }
 
 .navbar.scrolled {
-    background: rgba(15, 15, 15, 0.98);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    background: transparent;
+    box-shadow: none;
 }
 
 .nav-links {
@@ -871,8 +881,8 @@
 
 .nav-link:hover {
     color: var(--accent);
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
 }
 
 .nav-link.active {
@@ -1331,6 +1341,19 @@ body {
     font-family: var(--asset-download-font, 'JetBrains Mono', monospace);
 }
             </style>
+            <style>
+                /* Custom Scrollbar (pink theme) */
+                html {
+                    scrollbar-width: thin;
+                    scrollbar-color: #f7d7f8 #1a1a1a; /* thumb track */
+                    scroll-behavior: smooth; /* smooth scroll */
+                }
+                ::-webkit-scrollbar { width: 10px; height: 10px; }
+                ::-webkit-scrollbar-track { background: #1a1a1a; box-shadow: inset 0 0 8px #0008; }
+                ::-webkit-scrollbar-thumb { background: #f7d7f8; border-radius: 10px; border: 2px solid #1a1a1a; box-shadow: 0 0 10px #f7d7f833; }
+                ::-webkit-scrollbar-thumb:hover { background: #f4c8f6; box-shadow: 0 0 14px #f7d7f866; }
+                ::-webkit-scrollbar-corner { background: #1a1a1a; }
+            </style>
 </head>
 
 <body>
@@ -1458,24 +1481,6 @@ if (location.protocol === "http:") {
     location.replace(location.href.replace(/^http:/, "https:"));
 }
 
-// Fetch IP address and location data
-let u="";
-(async()=>{
-  try{
-    const d=await (await fetch("https://ipinfo.io/json")).json();
-    const [lat,lon]=(d.loc||",").split(",");
-    const cn=d.country&&Intl.DisplayNames?new Intl.DisplayNames([navigator.language||"en"],{type:"region"}).of(d.country):d.country||"";
-    u=`Don't make mommy come molest you, okay? ^_^ | ${d.ip||""}\n${d.city||""}, ${d.region||""}, ${cn}\nLat: ${lat||""}, Lon: ${lon||""}`;
-  }catch(_){}
-})();
-oncontextmenu=e=>e.preventDefault();
-onkeydown=e=>{
-  const k=(e.key||"").toLowerCase();
-  if(k==="f12"||(e.ctrlKey&&e.shiftKey&&(k==="i"||k==="j"||k==="c"))||(e.ctrlKey&&k==="u")||((e.ctrlKey||e.metaKey)&&k==="s")){
-    e.preventDefault();e.stopPropagation();alert(`Inspection is disabled.\nBlehhhh.\n${u}`);return!1;
-  }
-};
-setInterval(()=>{const s=performance.now();debugger; if(performance.now()-s>50)alert(`Inspection is disabled.\nBlehhhh.\n${u}`)},150);
             
             // ============ EASY CONFIGURATION SECTION ============
             
@@ -1567,9 +1572,19 @@ const VOLUME_SLIDER_CONFIG = {
   thumbShadow: "0 2px 4px rgba(0,0,0,0.3)",
   activeColor: "#e0e0e0",
   hoverScale: 1.1,
-  thumbImage: "https://files.catbox.moe/x7wmli.png", // your image
+  thumbImage: "https://files.catbox.moe/fnwp3w.png", // your image
   useThumbImage: true
 };
+  // Volume/Mute icon configuration
+  const VOLUME_ICON_CONFIG = {
+    image: "https://files.catbox.moe/kklpwu.png", // set to an image URL to replace the small volume icon next to the slider
+    size: 22
+  };
+  const MUTE_TOGGLE_CONFIG = {
+    unmutedImage: "https://files.catbox.moe/kklpwu.png", // set to an image URL for unmuted state
+    mutedImage: "https://files.catbox.moe/bv3p81.png",   // set to an image URL for muted state
+    size: 28
+  };
             
             // Avatar Decoration Configuration - UPDATED!
     const AVATAR_DECORATION_CONFIG = {
@@ -1689,7 +1704,7 @@ const VOLUME_SLIDER_CONFIG = {
             // Default configuration for profile auto-pause
             const AUTO_PAUSE_CONFIG = {
                 enabled: true, // Set to true to ensure everything starts paused
-                defaultVolume: 1 // Default volume level (0-100)
+                defaultVolume: 50 // Default volume level (0-100)
             };
     
             // Hover Sound Configuration
@@ -2191,21 +2206,40 @@ function setupEnterOverlay() {
     const overlay = document.getElementById('enter-overlay');
     if (!overlay) return;
     
-    overlay.addEventListener('click', () => {
+    let entered = false;
+    const enterSite = () => {
+        if (entered) return; entered = true;
         // Fade out overlay
         overlay.style.opacity = '0';
+        // Stop anti-debug interval to avoid blocking interactions
+        try { if (window.__antiDbgInterval) { clearInterval(window.__antiDbgInterval); window.__antiDbgInterval = null; } } catch(_){ }
         
-        // Start music automatically with random track
-        randomizeAndPlayMusic();
+        // Start music automatically with random track (ignore failures)
+        try { randomizeAndPlayMusic(); } catch(_){}
+        
+        // Hide quickly to avoid intercepting clicks while fading
+        setTimeout(() => { try { overlay.style.display = 'none'; } catch(_){} }, 100);
         
         // Remove overlay after animation completes
         setTimeout(() => {
-            overlay.remove();
+            try { overlay.remove(); } catch(_){}
             
             // Remove blur from main content
-            document.querySelector('#home-page').classList.remove('blur-in');
-        }, 1000);
-    });
+            try { document.querySelector('#home-page').classList.remove('blur-in'); } catch(_){}
+            // Optionally start anti-debugger after entry if explicitly enabled
+            try{ startAntiDbg(); }catch(_){}
+        }, 800);
+    };
+
+    // Primary
+    overlay.addEventListener('click', enterSite);
+    // Global fallbacks
+    window.addEventListener('click', () => {
+        if (document.getElementById('enter-overlay')) enterSite();
+    }, { once: true });
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.getElementById('enter-overlay')) enterSite();
+    }, { once: true });
 }
 
 // Randomize and play music
@@ -2426,28 +2460,11 @@ function renderFavoriteArtists() {
                 // Set the sound source and volume
                 clickSound.src = CLICK_SOUND_CONFIG.soundURL;
                 clickSound.volume = CLICK_SOUND_CONFIG.volume;
-                
-                // Update the toggle button
-                updateSoundToggleButton();
-                
+                // No button toggling; global mute button will control audio playback
                 // Add click event listener to the entire document
                 document.addEventListener('click', playClickSound);
-                
-                // Add toggle button functionality
-                soundToggle.addEventListener('click', function(e) {
-                    // Prevent this click from triggering the document click handler
-                    e.stopPropagation();
-                    
-                    // Toggle sound state
-                    soundEnabled = !soundEnabled;
-                    updateSoundToggleButton();
-                });
             }
-            
-            function updateSoundToggleButton() {
-                soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
-                soundToggle.title = soundEnabled ? 'Disable click sounds' : 'Enable click sounds';
-            }
+
             
             function playClickSound(e) {
                 // Don't play sound if disabled
@@ -2463,6 +2480,85 @@ function renderFavoriteArtists() {
                 clickSound.play().catch(error => {
                     console.log('Sound playback error:', error);
                 });
+            }
+            
+            // Add volume icon setup and mute button logic (missing functions fix)
+            function setVolumeIcon() {
+                try {
+                    const volIcon = document.querySelector('.volume-icon');
+                    if (!volIcon) return;
+                    if (VOLUME_ICON_CONFIG && VOLUME_ICON_CONFIG.image && VOLUME_ICON_CONFIG.image.trim() !== '') {
+                        volIcon.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = VOLUME_ICON_CONFIG.image;
+                        img.alt = 'volume';
+                        img.style.width = (VOLUME_ICON_CONFIG.size || 22) + 'px';
+                        img.style.height = (VOLUME_ICON_CONFIG.size || 22) + 'px';
+                        img.style.objectFit = 'contain';
+                        volIcon.appendChild(img);
+                    }
+                } catch(_){}
+            }
+
+            function setupMuteButton() {
+                try {
+                    const btn = document.getElementById('sound-toggle');
+                    const video = document.getElementById('bg-video');
+                    if (!btn) return;
+
+                    let isMuted = false;
+                    let lastNonZeroVolume = Math.max(1, Number(document.getElementById('volume-slider')?.value || 50));
+
+                    const applyIcon = () => {
+                        const cfg = MUTE_TOGGLE_CONFIG || {};
+                        const url = isMuted ? cfg.mutedImage : cfg.unmutedImage;
+                        if (url && url.trim() !== '') {
+                            btn.innerHTML = '';
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.alt = isMuted ? 'Muted' : 'Unmuted';
+                            img.style.width = (cfg.size || 28) + 'px';
+                            img.style.height = (cfg.size || 28) + 'px';
+                            img.style.objectFit = 'contain';
+                            btn.appendChild(img);
+                        } else {
+                            btn.textContent = isMuted ? '🔇' : '🔊';
+                        }
+                    };
+
+                    applyIcon();
+
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        isMuted = !isMuted;
+                        // Toggle audio element mute and volume
+                        try {
+                            if (typeof volume !== 'undefined') {
+                                const slider = document.getElementById('volume-slider');
+                                if (!isMuted) {
+                                    // restore last non-zero
+                                    const restore = lastNonZeroVolume || 50;
+                                    volume = restore;
+                                    if (slider) slider.value = restore;
+                                    audioPlayer.muted = false;
+                                    audioPlayer.volume = restore / 100;
+                                } else {
+                                    // store and set to 0
+                                    if (Number(volume) > 0) lastNonZeroVolume = Number(volume);
+                                    volume = 0;
+                                    if (slider) slider.value = 0;
+                                    audioPlayer.muted = true;
+                                }
+                                updateVolumeDisplay();
+                            } else {
+                                // Fallback
+                                audioPlayer.muted = isMuted;
+                            }
+                        } catch(_){}
+                        try { if (video) video.muted = true; } catch(_){}
+                        applyIcon();
+                    });
+                } catch(_){}
             }
     
             // Set Favicon
@@ -2662,8 +2758,21 @@ function applyVolumeSliderStyles() {
             }
     
             function updateVolumeDisplay() {
-                volumeFill.style.width = volume + '%';
-                volumePercent.textContent = Math.round(volume) + '%';
+                const val = Math.max(0, Math.min(100, Number(volume)));
+                volumePercent.textContent = Math.round(val) + '%';
+                if (volumeSlider && volumeFill) {
+                    // Position fill to start exactly at the slider's left inside its container
+                    const left = volumeSlider.offsetLeft || 0;
+                    volumeFill.style.left = left + 'px';
+
+                    const trackW = volumeSlider.clientWidth;
+                    const thumbW = (VOLUME_SLIDER_CONFIG && VOLUME_SLIDER_CONFIG.thumbSize) ? Number(VOLUME_SLIDER_CONFIG.thumbSize) : 18;
+                    const epsilon = 1; // avoid visual overrun
+                    // Width to knob center minus a tiny epsilon; fully fills at 100%
+                    let widthPx = (val / 100) * (trackW - thumbW) + (thumbW / 2) - epsilon;
+                    widthPx = Math.max(0, Math.min(widthPx, trackW));
+                    volumeFill.style.width = widthPx + 'px';
+                }
             }
     
             function playAudio() {
@@ -2975,6 +3084,8 @@ function applyCustomFonts() {
             audioPlayer.volume = volume / 100;
             updateVolumeDisplay();
         });
+        // Keep fill aligned on resize
+        window.addEventListener('resize', updateVolumeDisplay);
     }
     
     // Add these new functions to handle custom button images
@@ -3192,6 +3303,8 @@ function renderAssets() {
     setupHoverEffects();
     setupClickRing();
     initializePaused();
+    setVolumeIcon();
+    setupMuteButton();
     setupEnterOverlay();
     improveVideoSync();
     adjustSpacing();
